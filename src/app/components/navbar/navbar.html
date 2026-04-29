@@ -1,0 +1,35 @@
+<header class="navbar">
+  <div class="navbar-copy">
+    <h1>{{ title().title }}</h1>
+    <p>{{ title().subtitle }}</p>
+  </div>
+
+  <div class="navbar-actions">
+    <a class="search-link" routerLink="/search">
+      <app-ui-icon name="search" [size]="16" />
+      <span>Search</span>
+    </a>
+
+    <a class="create-pill" routerLink="/create-post">
+      <app-ui-icon name="plus" [size]="16" />
+      <span>Create</span>
+    </a>
+
+    @if (currentUser()) {
+      <a class="profile-pill" routerLink="/profile/me">
+        <app-avatar
+          [src]="currentUser()?.profilePicUrl ?? null"
+          [name]="currentUser()?.fullName ?? 'Profile'"
+          [seed]="currentUser()?.userId ?? 'profile'"
+          [size]="30"
+        />
+        <span>{{ currentUser()?.username }}</span>
+      </a>
+    } @else {
+      <button class="login-btn" type="button" (click)="authRequested.emit()">
+        <app-ui-icon name="plus" [size]="16" />
+        <span>Sign in</span>
+      </button>
+    }
+  </div>
+</header>

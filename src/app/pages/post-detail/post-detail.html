@@ -1,0 +1,214 @@
+@if (loading()) {
+  <section class="twitter-page detail-page">
+    <div class="twitter-main">
+      <div class="twitter-empty">Loading post...</div>
+    </div>
+  </section>
+} @else if (!post()) {
+  <app-empty-state
+    title="Post unavailable"
+    message="This post could not be loaded from post-service."
+    actionLabel="Back to feed"
+    (action)="backToFeed()"
+  />
+} @else {
+  <section class="twitter-page detail-page">
+    <div class="twitter-main">
+      <header class="twitter-main-header">
+        <button class="back-btn" type="button" (click)="backToFeed()">
+          <app-ui-icon name="back" [size]="20" />
+        </button>
+        <h1>Post</h1>
+      </header>
+
+      <article class="detail-tweet">
+        <button class="author-btn" type="button" (click)="openProfile()">
+          <app-avatar
+            [src]="authorAvatar()"
+            [name]="authorName()"
+            [seed]="post()!.authorId"
+            [size]="48"
+          />
+          <div>
+            <strong>{{ authorName() }}</strong>
+            <p>
+              {{ authorHandle() }} <span aria-hidden="true">&middot;</span> {{ post()!.createdAt | date: 'medium' }}
+            </p>
+          </div>
+        </button>
+
+        <div class="detail-top-actions">
+          <button class="secondary-chip" type="button" (click)="reportPost()">Report post</button>
+          @if (canDelete()) {
+            <button class="delete-post-btn" type="button" (click)="deletePost()">Delete post</button>
+          }
+        </div>
+
+        @if (post()!.content) {
+          <p class="detail-copy">{{ post()!.content }}</p>
+        }
+
+        @if (post()!.mediaUrls.length) {
+          <div class="hero-media">
+            @for (mediaUrl of post()!.mediaUrls; track mediaUrl) {
+              @if (isVideo(mediaUrl)) {
+                <video [src]="mediaUrl" controls></video>
+              } @else {
+                <img [src]="mediaUrl" alt="Post media" loading="lazy" />
+              }
+            }
+          </div>
+        }
+
+        <div class="detail-actions">
+          <button type="button" [class.active]="liked()" (click)="toggleLike()">
+            <app-ui-icon name="heart" [size]="17" [filled]="liked()" />
+            <span>{{ post()!.likesCount }}</span>
+          </button>
+          <label class="reaction-picker" aria-label="Reaction type">
+            <select
+              [disabled]="!currentUser()"
+              [ngModel]="reactionType() ?? 'NONE'"
+              (ngModelChange)="setReaction($event)"
+            >
+              <option value="NONE">No reaction</option>
+              <option value="LIKE">Like</option>
+              <option value="LOVE">Love</option>
+              <option value="HAHA">Haha</option>
+              <option value="WOW">Wow</option>
+              <option value="SAD">Sad</option>
+              <option value="ANGRY">Angry</option>
+            </select>
+          </label>
+          <button type="button" (click)="share()">
+            <app-ui-icon name="share" [size]="17" />
+            <span>{{ post()!.sharesCount || 0 }}</span>
+          </button>
+        </div>
+      </article>
+
+      <section class="comment-compose">
+        <textarea
+          [ngModel]="commentDraft()"
+          (ngModelChange)="commentDraft.set($event)"
+          rows="3"
+          placeholder="Post your reply"
+        ></textarea>
+        <button class="twitter-primary-btn" type="button" (click)="submitComment()">Reply</button>
+      </section>
+
+      <div class="reply-list">
+        @for (comment of comments(); track comment.commentId) {
+          <section class="thread-block">
+            <app-comment-item
+              [comment]="comment"
+              [authorName]="profileName(comment.authorId)"
+              [authorUsername]="profileUsername(comment.authorId)"
+              [authorAvatar]="profileAvatar(comment.authorId)"
+              [liked]="commentLiked(comment.commentId)"
+              [canReply]="!!currentUser()"
+              [canManage]="canManageComment(comment)"
+              [canReport]="!!currentUser() && currentUser()!.userId !== comment.authorId"
+              (profileRequested)="openCommentProfile($event)"
+              (likeRequested)="toggleCommentLike($event)"
+              (replyRequested)="openReply($event)"
+              (editRequested)="beginEdit(comment)"
+              (deleteRequested)="deleteComment(comment)"
+              (reportRequested)="reportComment($event)"
+            />
+
+            <div class="thread-toolbar">
+              <button class="thread-link" type="button" (click)="toggleThread(comment.commentId)">
+                {{ threadExpanded(comment.commentId) ? 'Hide replies' : 'View replies' }}
+              </button>
+            </div>
+
+            @if (isEditing(comment.commentId)) {
+              <div class="inline-editor">
+                <textarea
+                  [ngModel]="editDraft()"
+                  (ngModelChange)="editDraft.set($event)"
+                  rows="3"
+                ></textarea>
+                <div class="inline-actions">
+                  <button class="secondary-chip" type="button" (click)="cancelEdit()">Cancel</button>
+                  <button class="twitter-primary-btn" type="button" (click)="saveEdit(comment)">Save</button>
+                </div>
+              </div>
+            }
+
+            @if (isReplying(comment.commentId)) {
+              <div class="inline-editor nested-editor">
+                <textarea
+                  [ngModel]="replyDraft()"
+                  (ngModelChange)="replyDraft.set($event)"
+                  rows="3"
+                  placeholder="Write a reply"
+                ></textarea>
+                <div class="inline-actions">
+                  <button class="secondary-chip" type="button" (click)="replyingToId.set(null)">Cancel</button>
+                  <button class="twitter-primary-btn" type="button" (click)="submitReply(comment.commentId)">Reply</button>
+                </div>
+              </div>
+            }
+
+            @if (threadExpanded(comment.commentId)) {
+              <div class="reply-thread">
+                @if (loadingRepliesFor()[comment.commentId]) {
+                  <div class="thread-empty">Loading replies...</div>
+                } @else {
+                  @for (reply of repliesFor(comment.commentId); track reply.commentId) {
+                    <div class="reply-node">
+                      <app-comment-item
+                        [comment]="reply"
+                        [authorName]="profileName(reply.authorId)"
+                        [authorUsername]="profileUsername(reply.authorId)"
+                        [authorAvatar]="profileAvatar(reply.authorId)"
+                        [liked]="commentLiked(reply.commentId)"
+                        [canManage]="canManageComment(reply)"
+                        [canReport]="!!currentUser() && currentUser()!.userId !== reply.authorId"
+                        [nested]="true"
+                        (profileRequested)="openCommentProfile($event)"
+                        (likeRequested)="toggleCommentLike($event)"
+                        (editRequested)="beginEdit(reply)"
+                        (deleteRequested)="deleteComment(reply)"
+                        (reportRequested)="reportComment($event)"
+                      />
+
+                      @if (isEditing(reply.commentId)) {
+                        <div class="inline-editor nested-editor">
+                          <textarea
+                            [ngModel]="editDraft()"
+                            (ngModelChange)="editDraft.set($event)"
+                            rows="3"
+                          ></textarea>
+                          <div class="inline-actions">
+                            <button class="secondary-chip" type="button" (click)="cancelEdit()">Cancel</button>
+                            <button class="twitter-primary-btn" type="button" (click)="saveEdit(reply)">Save</button>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  } @empty {
+                    <div class="thread-empty">No replies in this thread yet.</div>
+                  }
+                }
+              </div>
+            }
+          </section>
+        } @empty {
+          <div class="twitter-empty">No replies yet.</div>
+        }
+      </div>
+    </div>
+
+    @if (shareOpen()) {
+      <app-share-sheet
+        [recipients]="shareRecipients()"
+        [sendingToId]="sharingToId()"
+        (closed)="closeShare()"
+        (shared)="shareToUser($event)"
+      />
+    }
+  </section>
+}

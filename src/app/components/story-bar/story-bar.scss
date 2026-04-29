@@ -1,0 +1,107 @@
+.stories {
+  padding: var(--space-3) var(--space-4) var(--space-2);
+  border-top: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
+  background: var(--bg-primary);
+}
+
+.story-track {
+  display: flex;
+  gap: var(--space-3);
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    height: 0;
+  }
+}
+
+.story-item {
+  position: relative;
+  display: grid;
+  gap: var(--space-2);
+  justify-items: center;
+  min-width: 82px;
+}
+
+.story-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transition: opacity var(--transition-base);
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.story-item input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.ring {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 70px;
+  height: 70px;
+  padding: 2px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent) 0%, #1d9bf0 100%);
+  overflow: hidden;
+}
+
+.ring img,
+.ring.add {
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+}
+
+.ring img {
+  object-fit: cover;
+  border: 2px solid var(--bg-primary);
+}
+
+.ring.add {
+  display: grid;
+  place-items: center;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--bg-hover);
+  }
+}
+
+.story-label {
+  max-width: 80px;
+  overflow: hidden;
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  line-height: var(--line-height-tight);
+}
+
+.story-badge {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  padding: var(--space-1) var(--space-2);
+  border: 2px solid var(--bg-primary);
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.88);
+  color: var(--bg-primary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+}

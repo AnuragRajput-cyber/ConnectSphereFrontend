@@ -1,0 +1,7 @@
+<button class="chat-item" type="button" [class.active]="active()" (click)="selected.emit(conversation().conversationId)">
+  <app-avatar [src]="avatarUrl()" [name]="name()" [seed]="participantId()" [size]="52" />
+  <div>
+    <strong>{{ name() }}</strong>
+    <p>{{ handle() }}</p>
+  </div>
+</button>

@@ -1,0 +1,150 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(17, 24, 39, 0.16);
+  backdrop-filter: blur(6px);
+}
+
+.modal {
+  width: min(520px, 100%);
+  display: grid;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.12);
+}
+
+.modal-header,
+.switcher,
+.oauth-row {
+  display: flex;
+  gap: 0.65rem;
+}
+
+.modal-header {
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.modal-header h2 {
+  font-size: 1.3rem;
+}
+
+.close-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 10px;
+  background: #f5f7fb;
+  cursor: pointer;
+}
+
+.switcher {
+  padding: 0.25rem;
+  border-radius: 999px;
+  background: #f5f7fb;
+}
+
+.switcher button {
+  flex: 1;
+  min-height: 36px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.switcher button.active {
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.06);
+}
+
+.form-grid {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.signup {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.form-grid label {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.form-grid span {
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.full,
+.submit-btn {
+  grid-column: 1 / -1;
+}
+
+.submit-btn,
+.oauth-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 42px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #fff;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 160ms ease, background-color 160ms ease;
+}
+
+.submit-btn {
+  background: #335cff;
+  border-color: #335cff;
+  color: rgb(223, 169, 6);
+}
+
+.ghost-btn {
+  min-height: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.hint {
+  margin: -0.2rem 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.submit-btn:hover,
+.oauth-btn:hover,
+.close-btn:hover {
+  transform: translateY(-1px);
+}
+
+.oauth-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 720px) {
+  .signup,
+  .oauth-row {
+    grid-template-columns: 1fr;
+  }
+}

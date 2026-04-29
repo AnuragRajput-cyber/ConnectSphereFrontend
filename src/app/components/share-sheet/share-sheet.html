@@ -1,0 +1,36 @@
+<div class="share-overlay" (click)="closed.emit()">
+  <section class="share-panel" (click)="$event.stopPropagation()">
+    <header class="share-head">
+      <div>
+        <h3>Share post</h3>
+        <p>Send this post to someone you follow.</p>
+      </div>
+      <button type="button" class="close-btn" (click)="closed.emit()" aria-label="Close share dialog">Close</button>
+    </header>
+
+    <div class="share-list">
+      @for (user of recipients(); track user.userId) {
+        <button class="share-recipient" type="button" (click)="shared.emit(user.userId)" [disabled]="sendingToId() === user.userId">
+          <div class="recipient-copy">
+            <app-avatar
+              [src]="user.profilePicUrl"
+              [name]="user.fullName"
+              [seed]="user.userId"
+              [size]="46"
+            />
+            <div>
+              <strong>{{ user.fullName }}</strong>
+              <p>@{{ user.username }}</p>
+            </div>
+          </div>
+          <span class="send-pill">{{ sendingToId() === user.userId ? 'Sending...' : 'Send' }}</span>
+        </button>
+      } @empty {
+        <div class="share-empty">
+          <h4>No followings yet</h4>
+          <p>Follow people first to send posts directly to them.</p>
+        </div>
+      }
+    </div>
+  </section>
+</div>

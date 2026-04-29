@@ -1,0 +1,155 @@
+<section class="auth-shell">
+  <section class="auth-card panel">
+    <div class="brand-lockup">
+      <app-ui-icon name="spark" [size]="34" [strokeWidth]="2" />
+      <h1>
+        @if (pending()) {
+          Verify your email
+        } @else if (!isSignup() && forgotMode()) {
+          {{ resetMode() ? 'Reset password' : 'Forgot password' }}
+        } @else {
+          {{ isSignup() ? 'Create your account' : 'Sign in to ConnectSphere' }}
+        }
+      </h1>
+      <p>{{ subheading() }}</p>
+    </div>
+
+    @if (pending()) {
+      <form class="auth-form" (ngSubmit)="submitOtp()">
+        <input
+          [ngModel]="otpCode()"
+          (ngModelChange)="otpCode.set($event)"
+          name="otpCode"
+          placeholder="6-digit code"
+          inputmode="numeric"
+          autocomplete="one-time-code"
+          required
+        />
+
+        <button class="twitter-primary-btn submit-btn" type="submit" [disabled]="working()">
+          {{ working() ? 'Verifying...' : 'Verify email' }}
+        </button>
+
+        <button class="link-btn" type="button" (click)="resendOtp()" [disabled]="working()">
+          Resend code
+        </button>
+      </form>
+    } @else {
+      <form class="auth-form" (ngSubmit)="submit()">
+        @if (isSignup()) {
+        <input
+          [ngModel]="signupForm().fullName"
+          (ngModelChange)="signupForm.update((value) => ({ ...value, fullName: $event }))"
+          name="fullName"
+          placeholder="Full name"
+          required
+        />
+        <input
+          [ngModel]="signupForm().username"
+          (ngModelChange)="signupForm.update((value) => ({ ...value, username: $event }))"
+          name="username"
+          placeholder="Username"
+          required
+        />
+        <input
+          [ngModel]="signupForm().email"
+          (ngModelChange)="signupForm.update((value) => ({ ...value, email: $event }))"
+          name="signupEmail"
+          type="email"
+          placeholder="Email"
+          required
+        />
+        <input
+          [ngModel]="signupForm().password"
+          (ngModelChange)="signupForm.update((value) => ({ ...value, password: $event }))"
+          name="signupPassword"
+          type="password"
+          placeholder="Password"
+          required
+        />
+        <textarea
+          [ngModel]="signupForm().bio"
+          (ngModelChange)="signupForm.update((value) => ({ ...value, bio: $event }))"
+          name="bio"
+          rows="3"
+          placeholder="Bio"
+        ></textarea>
+        } @else {
+        <input
+          [ngModel]="loginForm().email"
+          (ngModelChange)="loginForm.update((value) => ({ ...value, email: $event }))"
+          name="email"
+          type="email"
+          placeholder="Email"
+          required
+        />
+          @if (!forgotMode()) {
+            <input
+              [ngModel]="loginForm().password"
+              (ngModelChange)="loginForm.update((value) => ({ ...value, password: $event }))"
+              name="password"
+              type="password"
+              placeholder="Password"
+              required
+            />
+          } @else if (!resetMode()) {
+            <p class="helper">We will email you a reset code.</p>
+          } @else {
+            <input
+              [ngModel]="resetCode()"
+              (ngModelChange)="resetCode.set($event)"
+              name="resetCode"
+              placeholder="6-digit code"
+              inputmode="numeric"
+              autocomplete="one-time-code"
+              required
+            />
+            <input
+              [ngModel]="resetNewPassword()"
+              (ngModelChange)="resetNewPassword.set($event)"
+              name="resetNewPassword"
+              type="password"
+              placeholder="New password"
+              required
+            />
+          }
+      }
+
+      <button class="twitter-primary-btn submit-btn" type="submit" [disabled]="working()">
+          @if (working()) {
+            Please wait...
+          } @else if (!isSignup() && forgotMode()) {
+            {{ resetMode() ? 'Reset password' : 'Send reset code' }}
+          } @else {
+            {{ isSignup() ? 'Create account' : 'Sign in' }}
+          }
+      </button>
+      </form>
+
+      @if (!isSignup()) {
+        @if (!forgotMode()) {
+          <button class="link-btn" type="button" (click)="enableForgotPassword()">Forgot password?</button>
+        } @else {
+          <button class="link-btn" type="button" (click)="cancelForgotPassword()">Back to sign in</button>
+        }
+      }
+    }
+
+    <a class="oauth-link" href="/oauth2/authorization/google">
+      <app-ui-icon name="google" [size]="16" />
+      <span>{{ isSignup() ? 'Continue with Google' : 'Sign in with Google' }}</span>
+    </a>
+
+    <a class="oauth-link" href="/oauth2/authorization/github">
+      <app-ui-icon name="github" [size]="16" />
+      <span>{{ isSignup() ? 'Continue with GitHub' : 'Sign in with GitHub' }}</span>
+    </a>
+
+    <p class="switch-copy">
+      {{ isSignup() ? 'Already have an account?' : "Don't have an account?" }}
+      <a [routerLink]="isSignup() ? '/login' : '/register'">
+        {{ isSignup() ? 'Sign in' : 'Create one' }}
+      </a>
+    </p>
+  </section>
+</section>

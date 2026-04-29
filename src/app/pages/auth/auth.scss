@@ -1,0 +1,68 @@
+.auth-shell {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+
+.auth-card {
+  width: min(460px, 100%);
+  display: grid;
+  gap: 1.25rem;
+  padding: 2rem;
+}
+
+.brand-lockup {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: start;
+}
+
+.brand-lockup p,
+.switch-copy {
+  color: var(--muted);
+}
+
+.auth-form {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.submit-btn {
+  width: 100%;
+  margin-top: 0.25rem;
+}
+
+.helper {
+  margin: -0.25rem 0 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.link-btn {
+  border: 0;
+  background: transparent;
+  padding: 0.25rem 0;
+  color: var(--accent);
+  font-weight: 600;
+  justify-self: start;
+}
+
+.link-btn:hover {
+  text-decoration: underline;
+}
+
+.oauth-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+
+.switch-copy a {
+  color: var(--accent);
+  font-weight: 700;
+}

@@ -1,0 +1,87 @@
+@if (!currentUser()) {
+  <app-empty-state
+    title="Sign in to publish"
+    message="Create-post uses your live auth session, media upload, and post-service flow."
+  />
+} @else {
+  <section class="create-shell">
+    <section class="composer-card panel">
+      <div class="author-row">
+        <app-avatar
+          [src]="currentUser()?.profilePicUrl ?? null"
+          [name]="currentUser()?.fullName ?? 'User'"
+          [seed]="currentUser()?.userId ?? 'user'"
+          [size]="56"
+        />
+        <div>
+          <strong>{{ currentUser()?.fullName }}</strong>
+          <p>@{{ currentUser()?.username }}</p>
+        </div>
+      </div>
+
+      <label class="field">
+        <span>Caption</span>
+        <textarea
+          [ngModel]="content()"
+          (ngModelChange)="content.set($event)"
+          rows="7"
+          placeholder="Share what is happening right now..."
+        ></textarea>
+      </label>
+
+      <div class="two-col">
+        <label class="field">
+          <span>Visibility</span>
+          <select [ngModel]="visibility()" (ngModelChange)="visibility.set($event)" name="visibility">
+            <option value="PUBLIC">Public</option>
+            <option value="FOLLOWERS_ONLY">Followers only</option>
+            <option value="PRIVATE">Private</option>
+          </select>
+        </label>
+
+        <label class="upload-field">
+          <span>Media</span>
+          <div class="upload-control">
+            <label class="upload-trigger">
+              <input type="file" accept="image/*,video/*" (change)="onFileChange($event)" />
+              <span>Choose file</span>
+            </label>
+            <span class="upload-copy">{{ selectedFile()?.name || 'No file selected' }}</span>
+          </div>
+        </label>
+      </div>
+
+      @if (selectedFile()) {
+        <div class="file-chip">{{ selectedFile()?.name }}</div>
+      }
+
+      <div class="actions">
+        <button class="ghost-btn" type="button" routerLink="/feed">Cancel</button>
+        <button class="primary-btn" type="button" [disabled]="publishing() || !canSubmit()" (click)="publish()">
+          {{ publishing() ? 'Publishing...' : 'Publish post' }}
+        </button>
+      </div>
+    </section>
+
+    <section class="preview-card panel">
+      <p class="eyebrow">Preview</p>
+      @if (previewUrl()) {
+        <div class="preview-media">
+          @if (selectedFile()?.type?.startsWith('video/')) {
+            <video [src]="previewUrl()!" controls></video>
+          } @else {
+            <img [src]="previewUrl()!" alt="Preview media" />
+          }
+        </div>
+      } @else {
+        <div class="preview-empty">Add a photo or video to enrich your post.</div>
+      }
+
+      @if (content().trim()) {
+        <p class="preview-copy">{{ content() }}</p>
+      } @else {
+        <p class="preview-copy muted">Your text preview will appear here.</p>
+      }
+    </section>
+  </section>
+}

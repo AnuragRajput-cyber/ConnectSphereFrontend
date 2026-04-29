@@ -1,0 +1,99 @@
+<section class="twitter-page">
+  <div class="twitter-main">
+    <header class="twitter-main-header explore-header">
+      <h1>Explore</h1>
+      <form class="explore-search" (ngSubmit)="search()">
+        <app-ui-icon name="search" [size]="17" />
+        <input
+          [ngModel]="query()"
+          (ngModelChange)="query.set($event)"
+          name="searchQuery"
+          placeholder="Search ConnectSphere"
+        />
+      </form>
+    </header>
+
+    @if (loading()) {
+      <div class="twitter-empty">Loading search-service results...</div>
+    } @else if (!results().users.length && !results().posts.length && !results().hashtags.length) {
+      <div class="twitter-empty">
+        <h3>No results found</h3>
+        <p>Try another name, phrase, or hashtag.</p>
+      </div>
+    } @else {
+      @if (results().hashtags.length) {
+        <section class="result-section">
+          <div class="section-head">
+            <h2>Trending topics</h2>
+          </div>
+          <div class="topic-list">
+            @for (tag of results().hashtags; track tag.hashtagId) {
+              <button class="topic-item" type="button" (click)="openHashtag(tag.tag)">
+                <span class="eyebrow">Trending</span>
+                <strong>#{{ tag.tag }}</strong>
+                <p>{{ tag.postCount }} posts</p>
+              </button>
+            }
+          </div>
+        </section>
+      }
+
+      @if (results().users.length) {
+        <section class="result-section">
+          <div class="section-head">
+            <h2>People</h2>
+          </div>
+          <div class="people-list">
+            @for (user of results().users; track user.userId) {
+              <app-user-card
+                [user]="user"
+                [compact]="true"
+                [following]="isFollowing(user.userId)"
+                [pending]="pendingIds()[user.userId]"
+                [showMessage]="true"
+                [currentUserId]="currentUser()?.userId ?? null"
+                (followRequested)="follow(user)"
+                (messageRequested)="message(user)"
+                (profileRequested)="openProfile($event)"
+              />
+            }
+          </div>
+        </section>
+      }
+
+      @if (results().posts.length) {
+        <section class="result-section">
+          <div class="section-head">
+            <h2>Top posts</h2>
+          </div>
+          <div class="post-result-list">
+            @for (post of results().posts; track post.postId) {
+              <button class="post-result" type="button" (click)="openPost(post.postId)">
+                <div class="post-result-copy">
+                  <strong>{{ postSummary(post) }}</strong>
+                  <p>
+                    {{ post.likesCount }} likes <span aria-hidden="true">&middot;</span> {{ post.commentsCount }} comments
+                  </p>
+                </div>
+                @if (post.mediaUrls[0]) {
+                  <img [src]="post.mediaUrls[0]" alt="Post media" loading="lazy" />
+                }
+              </button>
+            }
+          </div>
+        </section>
+      }
+    }
+  </div>
+
+  <app-right-sidebar
+    [currentUser]="currentUser()"
+    [discoverUsers]="featuredUsers()"
+    [followingIds]="followingIds()"
+    [pendingIds]="pendingIds()"
+    [trending]="results().hashtags"
+    (followClicked)="followSuggested($event)"
+    (profileClicked)="openProfile($event)"
+    (authRequested)="openAuth()"
+  />
+</section>

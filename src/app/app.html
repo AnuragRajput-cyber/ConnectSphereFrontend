@@ -1,0 +1,20 @@
+<div class="shell" [class.auth-shell]="!chromeVisible()">
+  @if (chromeVisible()) {
+    <app-sidebar
+      [currentUser]="currentUser()"
+      [conversationCount]="conversationCount()"
+      [unreadNotifications]="unreadNotifications()"
+      [isAuthenticated]="isAuthenticated()"
+      (authRequested)="openAuth()"
+      (logoutRequested)="logout()"
+    />
+  }
+
+  <div class="content-shell" [class.auth-content]="!chromeVisible()">
+    <main class="page-shell" [class.auth-page-shell]="!chromeVisible()">
+      <router-outlet />
+    </main>
+  </div>
+</div>
+
+<app-toast-stack />

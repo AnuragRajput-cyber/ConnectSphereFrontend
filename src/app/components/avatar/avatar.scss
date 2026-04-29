@@ -1,0 +1,19 @@
+:host {
+  display: inline-flex;
+  line-height: 0;
+  flex-shrink: 0;
+}
+
+.avatar {
+  display: block;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--bg-secondary);
+  box-shadow: none;
+  border: 2px solid var(--surface);
+  transition: border-color var(--transition-base);
+
+  &:hover {
+    border-color: var(--accent);
+  }
+}

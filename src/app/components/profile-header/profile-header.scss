@@ -1,0 +1,153 @@
+.profile-header {
+  margin-top: -4.5rem;
+}
+
+.profile-header {
+  padding: 1.25rem 0 1rem;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+}
+
+.profile-body {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 2.25rem;
+  padding: 1rem 0 0;
+}
+
+.profile-topbar,
+.username-row,
+.actions,
+.stats {
+  display: flex;
+  gap: 0.8rem;
+}
+
+.profile-topbar {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.username-row {
+  margin-left: 5px;
+  align-items: center;
+}
+
+.menu-btn {
+  display: grid;
+  gap: 3px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.menu-btn span {
+  width: 18px;
+  height: 1.8px;
+  border-radius: 999px;
+  background: var(--ink);
+}
+
+.story-ring {
+  display: inline-grid;
+  place-items: center;
+  width: 98px;
+  height: 98px;
+  border-radius: 50%;
+  background: var(--story-ring);
+}
+
+.profile-avatar {
+  display: inline-grid;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 3px solid var(--bg);
+  box-shadow: none;
+}
+
+.profile-copy {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+.name-row strong {
+  font-size: 1rem;
+}
+
+.bio,
+.stats span {
+  margin: 0;
+  color: var(--muted);
+}
+
+.actions {
+  padding-top: 1rem;
+}
+
+.stats {
+  justify-content: flex-start;
+  gap: 3rem;
+  text-align: left;
+}
+
+.stats article {
+  min-width: 72px;
+}
+
+.stats strong {
+  display: block;
+  font-size: 1.15rem;
+}
+
+.primary-btn,
+.ghost-btn {
+  min-height: 34px;
+  padding: 0 1rem;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  flex: 1;
+}
+
+.primary-btn {
+  border: 0;
+  background: var(--accent);
+  color: #fff;
+
+  &.pending {
+    background: #eef6ff;
+    color: var(--accent);
+    border: 1px solid rgba(29, 155, 240, 0.22);
+  }
+}
+
+.ghost-btn {
+  border: 1px solid var(--border);
+  background: #fff;
+}
+
+.ghost-btn.full {
+  width: 100%;
+}
+
+@media (max-width: 760px) {
+  .profile-body {
+    grid-template-columns: 80px minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .stats {
+    justify-content: space-between;
+    gap: 1rem;
+    text-align: center;
+  }
+
+  .actions {
+    padding-top: 0.85rem;
+  }
+}

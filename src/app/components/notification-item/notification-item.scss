@@ -1,0 +1,118 @@
+.notification-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid var(--border-primary);
+  transition: background-color var(--transition-base);
+
+  &:hover {
+    background-color: var(--bg-hover);
+  }
+}
+
+.notification-body {
+  display: flex;
+  gap: var(--space-3);
+  align-items: start;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.identity {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.dot {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--bg-primary);
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.notification-item.read .dot {
+  display: none;
+}
+
+.content {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.copy,
+.meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+}
+
+.copy span,
+.meta-row small {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.type-pill,
+.unread-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 0 var(--space-2);
+  border-radius: 999px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+}
+
+.type-pill {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+}
+
+.unread-tag {
+  color: var(--accent);
+  background: rgba(29, 155, 240, 0.1);
+}
+
+.notification-actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.notification-actions button {
+  min-height: 34px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--border-primary);
+  border-radius: 999px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+
+  &:hover {
+    background-color: var(--bg-secondary);
+    border-color: var(--text-secondary);
+  }
+}
+
+@media (max-width: 768px) {
+  .notification-item {
+    grid-template-columns: 1fr;
+  }
+
+  .notification-actions {
+    justify-content: flex-start;
+  }
+}

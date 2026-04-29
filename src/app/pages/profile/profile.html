@@ -1,0 +1,201 @@
+@if (loading()) {
+  <section class="twitter-page">
+    <div class="twitter-main">
+      <div class="twitter-empty">Loading profile...</div>
+    </div>
+  </section>
+} @else if (!displayUser()) {
+  <app-empty-state
+    title="Profile unavailable"
+    message="Sign in to view posts and account details."
+  />
+} @else {
+  <section class="twitter-page">
+    <div class="twitter-main">
+      <header class="twitter-main-header profile-topbar">
+        <a class="back-btn" routerLink="/feed" aria-label="Back to feed">
+          <app-ui-icon name="back" [size]="20" />
+        </a>
+        <div class="topbar-copy">
+          <h1>{{ displayUser()!.fullName }}</h1>
+          <p>{{ counts().posts }} posts</p>
+        </div>
+      </header>
+
+      <section class="profile-banner">
+        @if (bannerUrl()) {
+          <img [src]="bannerUrl()!" alt="Profile banner" />
+        } @else {
+          <div class="banner-fallback">
+            <span>{{ displayUser()!.fullName }}</span>
+            <p>{{ displayUser()!.privateAccount ? 'Private account' : 'Public account' }}</p>
+          </div>
+        }
+        @if (isOwnProfile()) {
+          <label class="banner-upload-btn">
+            <app-ui-icon name="image" [size]="16" />
+            <span>{{ uploadingBanner() ? 'Uploading...' : 'Update banner' }}</span>
+            <input type="file" accept="image/*" (change)="uploadBannerImage($event)" />
+          </label>
+        }
+      </section>
+      <app-profile-header
+        [user]="displayUser()!"
+        [counts]="counts()"
+        [ownProfile]="isOwnProfile()"
+        [following]="following()"
+        [pending]="followRequested()"
+        [followPending]="followPending()"
+        (editRequested)="tab.set('about')"
+        (followRequested)="toggleFollow()"
+        (messageRequested)="messageViewedUser()"
+      />
+
+      <section class="tab-panel">
+        <div class="tabs">
+          <button type="button" [class.active]="tab() === 'posts'" (click)="tab.set('posts')">Posts</button>
+          <button type="button" [class.active]="tab() === 'media'" (click)="tab.set('media')">Media</button>
+          <button type="button" [class.active]="tab() === 'about'" (click)="tab.set('about')">About</button>
+        </div>
+      </section>
+
+      @if (tab() === 'about') {
+        <section class="about-panel twitter-card">
+          <div class="about-summary">
+            <div>
+              <p class="eyebrow">About</p>
+              <h3>{{ displayUser()!.fullName }}</h3>
+              <p class="about-copy">{{ displayUser()!.bio || 'No bio added yet.' }}</p>
+            </div>
+            <div class="summary-actions">
+              <div class="summary-pill" [class.private]="displayUser()!.privateAccount">
+                {{ displayUser()!.privateAccount ? 'Private account' : 'Public account' }}
+              </div>
+              @if (!isOwnProfile() && currentUser()) {
+                <button class="report-account-btn" type="button" (click)="reportViewedUser()">Report account</button>
+              }
+            </div>
+          </div>
+          @if (isOwnProfile()) {
+            <div class="section-head">
+              <div>
+                <p class="eyebrow">Edit profile</p>
+                <h3>Update your account</h3>
+                <p class="section-copy">Refresh your bio, avatar, banner, and privacy settings from one place.</p>
+              </div>
+              <div class="upload-actions">
+                <label class="upload-btn">
+                  <span>{{ uploadingImage() ? 'Uploading...' : 'Upload photo' }}</span>
+                  <input type="file" accept="image/*" (change)="uploadProfilePicture($event)" />
+                </label>
+                <label class="upload-btn secondary">
+                  <span>{{ uploadingBanner() ? 'Uploading...' : 'Upload banner' }}</span>
+                  <input type="file" accept="image/*" (change)="uploadBannerImage($event)" />
+                </label>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <label>
+                <span>Full name</span>
+                <input [ngModel]="form().fullName" (ngModelChange)="form.update((value) => ({ ...value, fullName: $event }))" />
+              </label>
+              <label>
+                <span>Username</span>
+                <input [ngModel]="form().username" (ngModelChange)="form.update((value) => ({ ...value, username: $event }))" />
+              </label>
+              <label>
+                <span>Email</span>
+                <input [ngModel]="form().email" (ngModelChange)="form.update((value) => ({ ...value, email: $event }))" />
+              </label>
+              <label>
+                <span>Profile picture URL</span>
+                <input [ngModel]="form().profilePicUrl" (ngModelChange)="form.update((value) => ({ ...value, profilePicUrl: $event }))" />
+              </label>
+              <label>
+                <span>Banner image URL</span>
+                <input [ngModel]="form().bannerUrl" (ngModelChange)="form.update((value) => ({ ...value, bannerUrl: $event }))" />
+              </label>
+              <label class="bio-field">
+                <span>Bio</span>
+                <textarea rows="4" [ngModel]="form().bio" (ngModelChange)="form.update((value) => ({ ...value, bio: $event }))"></textarea>
+              </label>
+              <label class="toggle-field">
+                <span>Privacy</span>
+                <button
+                  type="button"
+                  class="privacy-toggle"
+                  [class.private]="form().privateAccount"
+                  (click)="form.update((value) => ({ ...value, privateAccount: !value.privateAccount }))"
+                >
+                  <span class="toggle-thumb"></span>
+                  <strong>{{ form().privateAccount ? 'Private account' : 'Public account' }}</strong>
+                </button>
+                <small>
+                  {{ form().privateAccount
+                    ? 'New followers must request access before they can follow you.'
+                    : 'Anyone can follow you instantly.' }}
+                </small>
+              </label>
+            </div>
+
+            <button class="twitter-primary-btn save-btn" type="button" [disabled]="saving()" (click)="save()">
+              {{ saving() ? 'Saving...' : 'Save profile' }}
+            </button>
+
+            <div class="danger-zone">
+              <div>
+                <p class="eyebrow">Danger zone</p>
+                <h3>Deactivate account</h3>
+                <p class="danger-copy">This will mark your account inactive and sign you out immediately.</p>
+              </div>
+              <button class="danger-btn" type="button" (click)="deactivateAccount()">Deactivate account</button>
+            </div>
+          }
+        </section>
+      } @else if (contentLocked() && tab() !== 'about') {
+        <div class="twitter-empty">
+          <h3>This account is private</h3>
+          <p>{{ followRequested() ? 'Your follow request is pending approval.' : 'Follow this user to see their posts and media.' }}</p>
+        </div>
+      } @else if ((tab() === 'media' ? mediaPosts().length : posts().length) === 0) {
+        <div class="twitter-empty">Nothing to show in this section yet.</div>
+      } @else {
+        <div class="twitter-list">
+          @for (post of (tab() === 'media' ? mediaPosts() : posts()); track post.postId) {
+            <button class="profile-post-card" type="button" (click)="openPost(post.postId)">
+              <div class="post-topline">
+                <strong>{{ displayUser()!.fullName }}</strong>
+                <span>@{{ displayUser()!.username }}</span>
+                <span aria-hidden="true">&middot;</span>
+                <span>{{ post.createdAt | date: 'short' }}</span>
+              </div>
+              @if (post.content) {
+                <p class="post-copy">{{ post.content }}</p>
+              }
+              @if (post.mediaUrls[0]) {
+                <div class="post-media">
+                  <img [src]="post.mediaUrls[0]" alt="Post media" loading="lazy" />
+                </div>
+              }
+              <div class="post-stats">
+                <span>{{ post.likesCount }} likes</span>
+                <span>{{ post.commentsCount }} comments</span>
+              </div>
+            </button>
+          }
+        </div>
+      }
+    </div>
+
+    <app-right-sidebar
+      [currentUser]="currentUser()"
+      [discoverUsers]="discoverUsers()"
+      [followingIds]="discoverFollowingIds()"
+      [pendingIds]="discoverPendingIds()"
+      [trending]="trending()"
+      (followClicked)="followSuggested($event)"
+      (profileClicked)="openProfile($event)"
+    />
+  </section>
+}

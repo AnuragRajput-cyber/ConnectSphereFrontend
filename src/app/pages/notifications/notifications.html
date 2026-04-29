@@ -1,0 +1,82 @@
+@if (!currentUser()) {
+  <app-empty-state
+    title="Sign in to view notifications"
+    message="Your live activity feed will appear here after authentication."
+  />
+} @else {
+  <section class="twitter-page notifications-page">
+    <div class="twitter-main">
+      <header class="twitter-main-header">
+        <h1>Notifications</h1>
+      </header>
+
+      @if (followRequests().length) {
+        <section class="request-panel">
+          <div class="request-head">
+            <div>
+              <h2>Follow requests</h2>
+              <p>Private-account requests waiting for your approval.</p>
+            </div>
+          </div>
+
+          <div class="request-list">
+            @for (request of followRequests(); track request.followId) {
+              <article class="request-card">
+                <button class="request-user" type="button" (click)="openRequesterProfile(request.followerId)">
+                  @if (actorAvatar(request.followerId)) {
+                    <img
+                      [src]="actorAvatar(request.followerId)!"
+                      alt=""
+                      class="request-avatar"
+                    />
+                  } @else {
+                    <span class="request-avatar placeholder">{{ actorName(request.followerId).charAt(0) }}</span>
+                  }
+                  <div>
+                    <strong>{{ actorName(request.followerId) }}</strong>
+                    <p>wants to follow your private profile</p>
+                  </div>
+                </button>
+                <div class="request-actions">
+                  <button type="button" class="accept-btn" (click)="acceptRequest(request.followId)">Accept</button>
+                  <button type="button" class="reject-btn" (click)="rejectRequest(request.followId)">Decline</button>
+                </div>
+              </article>
+            }
+          </div>
+        </section>
+      }
+
+      <section class="notification-tabs">
+        <button type="button" [class.active]="filter() === 'all'" (click)="filter.set('all')">All</button>
+        <button type="button" [class.active]="filter() === 'unread'" (click)="filter.set('unread')">Unread</button>
+        <button class="mark-all" type="button" (click)="markAll()">Mark all read</button>
+      </section>
+
+      @if (loading()) {
+        <div class="twitter-empty">Loading notifications...</div>
+      } @else if (!notifications().length) {
+        <div class="twitter-empty">No notifications yet.</div>
+      } @else {
+        <div class="twitter-list">
+          @for (section of sections(); track section.label) {
+            <section class="notification-group">
+              <h2>{{ section.label }}</h2>
+              @for (item of section.items; track item.notificationId) {
+                <app-notification-item
+                  [item]="item"
+                  [actorName]="actorName(item.actorId)"
+                  [actorAvatar]="actorAvatar(item.actorId)"
+                  [actorSeed]="item.actorId || item.notificationId"
+                  (opened)="open($event)"
+                  (marked)="mark($event)"
+                  (removed)="remove($event)"
+                />
+              }
+            </section>
+          }
+        </div>
+      }
+    </div>
+  </section>
+}

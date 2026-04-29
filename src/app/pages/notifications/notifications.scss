@@ -1,0 +1,129 @@
+.notifications-page {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 680px;
+}
+
+.request-panel {
+  display: grid;
+  gap: 1rem;
+  padding: 1.1rem 1rem;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, #ffffff, #f9fbff);
+}
+
+.request-head {
+  h2 {
+    font-size: 1.1rem;
+    margin-bottom: 0.2rem;
+  }
+
+  p {
+    color: var(--muted);
+  }
+}
+
+.request-list {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.request-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--border-primary);
+  border-radius: 18px;
+  background: #fff;
+}
+
+.request-user {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-width: 0;
+  text-align: left;
+
+  strong {
+    display: block;
+    color: var(--ink);
+  }
+
+  p {
+    color: var(--muted);
+  }
+}
+
+.request-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: linear-gradient(135deg, #f472b6, #ec4899);
+}
+
+.request-avatar.placeholder {
+  display: inline-grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 800;
+}
+
+.request-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.accept-btn,
+.reject-btn {
+  min-height: 36px;
+  padding: 0 0.95rem;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.accept-btn {
+  background: var(--accent);
+  color: #fff;
+}
+
+.reject-btn {
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text-primary);
+}
+
+.notification-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.notification-tabs button {
+  min-height: 34px;
+  padding: 0 0.95rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.notification-tabs button.active {
+  background: var(--surface-soft);
+  color: var(--ink);
+}
+
+.mark-all {
+  margin-left: auto;
+}
+
+.notification-group h2 {
+  padding: 1rem 1rem 0;
+  font-size: 1rem;
+}

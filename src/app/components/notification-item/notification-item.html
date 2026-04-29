@@ -1,0 +1,34 @@
+<article class="notification-item" [class.read]="item().read">
+  <button class="notification-body" type="button" (click)="opened.emit(item())">
+    <div class="identity">
+      <app-avatar
+        [src]="actorAvatar()"
+        [name]="actorName()"
+        [seed]="actorSeed() || item().notificationId"
+        [size]="44"
+      />
+      <span class="dot"></span>
+    </div>
+
+    <div class="content">
+      <p class="copy">
+        <strong>{{ actorName() }}</strong>
+        <span>{{ item().message }}</span>
+      </p>
+      <div class="meta-row">
+        <small>{{ item().createdAt | date: 'MMM d, h:mm a' }}</small>
+        <span class="type-pill">{{ item().type.toLowerCase() }}</span>
+      </div>
+      @if (!item().read) {
+        <span class="unread-tag">New</span>
+      }
+    </div>
+  </button>
+
+  <div class="notification-actions">
+    @if (!item().read) {
+      <button type="button" (click)="marked.emit(item().notificationId)">Mark read</button>
+    }
+    <button class="danger" type="button" (click)="removed.emit(item().notificationId)">Delete</button>
+  </div>
+</article>

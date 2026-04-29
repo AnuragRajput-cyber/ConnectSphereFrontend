@@ -1,0 +1,42 @@
+<aside class="right-rail">
+  <section class="rail-widget panel">
+    <div class="widget-head">
+      <h3>What's happening</h3>
+    </div>
+    <div class="trend-list">
+      @for (tag of trending(); track tag.hashtagId) {
+        <button class="trend-item" type="button">
+          <span class="eyebrow">Trending in ConnectSphere</span>
+          <strong>#{{ tag.tag }}</strong>
+          <p>{{ tag.postCount }} posts</p>
+        </button>
+      }
+      @if (!trending().length) {
+        <p class="widget-empty">Nothing yet.</p>
+      }
+    </div>
+  </section>
+
+  <section class="rail-widget panel">
+    <div class="widget-head">
+      <h3>Who to follow</h3>
+    </div>
+    <div class="follow-list">
+      @for (user of visibleDiscoverUsers(); track user.userId) {
+        <app-user-card
+          [user]="user"
+          [compact]="true"
+          [following]="isFollowing(user.userId)"
+          [pending]="isPending(user.userId)"
+          [showMessage]="false"
+          [currentUserId]="currentUser()?.userId ?? null"
+          (followRequested)="follow($event)"
+          (profileRequested)="profileClicked.emit($event)"
+        />
+      }
+      @if (!visibleDiscoverUsers().length) {
+        <p class="widget-empty">None for now.</p>
+      }
+    </div>
+  </section>
+</aside>

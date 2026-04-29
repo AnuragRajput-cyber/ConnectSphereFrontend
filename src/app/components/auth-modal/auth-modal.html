@@ -1,0 +1,107 @@
+@if (open()) {
+  <div class="overlay" (click)="closed.emit()">
+    <section class="modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div>
+          <p class="eyebrow">Account access</p>
+        </div>
+        <button class="close-btn" type="button" (click)="closed.emit()">
+          <app-ui-icon name="close" [size]="16" />
+        </button>
+      </div>
+
+      <div class="switcher">
+        <button type="button" [class.active]="mode() === 'login'" (click)="mode.set('login')">Login</button>
+        <button type="button" [class.active]="mode() === 'signup'" (click)="mode.set('signup')">Sign up</button>
+      </div>
+
+      @if (pending()) {
+        <form class="form-grid" (ngSubmit)="submitOtp()">
+          <label class="full">
+            <span>Verification code</span>
+            <input
+              [ngModel]="otpCode()"
+              (ngModelChange)="otpCode.set($event)"
+              name="otpCode"
+              inputmode="numeric"
+              autocomplete="one-time-code"
+              required
+            />
+          </label>
+
+          <button class="submit-btn" type="submit" [disabled]="working()">
+            @if (working()) {
+              <app-ui-icon name="spinner" [size]="15" />
+            }
+            <span>{{ working() ? 'Verifying...' : 'Verify email' }}</span>
+          </button>
+
+          <button class="ghost-btn full" type="button" (click)="resendOtp()" [disabled]="working()">
+            Resend code
+          </button>
+        </form>
+      } @else if (mode() === 'login') {
+        <form class="form-grid" (ngSubmit)="submitLogin()">
+          <label>
+            <span>Email</span>
+            <input [(ngModel)]="loginForm.email" name="loginEmail" type="email" required />
+          </label>
+          <label>
+            <span>Password</span>
+            <input [(ngModel)]="loginForm.password" name="loginPassword" type="password" required />
+          </label>
+          <button class="submit-btn" type="submit" [disabled]="working()">
+            @if (working()) {
+              <app-ui-icon name="spinner" [size]="15" />
+            }
+            <span>{{ working() ? 'Signing in...' : 'Login' }}</span>
+          </button>
+        </form>
+      } @else {
+        <form class="form-grid signup" (ngSubmit)="submitSignup()">
+          <label>
+            <span>Full name</span>
+            <input [(ngModel)]="signupForm.fullName" name="signupFullName" type="text" required />
+          </label>
+          <label>
+            <span>Username</span>
+            <input [(ngModel)]="signupForm.username" name="signupUsername" type="text" required />
+          </label>
+          <label>
+            <span>Email</span>
+            <input [(ngModel)]="signupForm.email" name="signupEmail" type="email" required />
+          </label>
+          <label>
+            <span>Password</span>
+            <input [(ngModel)]="signupForm.password" name="signupPassword" type="password" required />
+          </label>
+          <label class="full">
+            <span>Bio</span>
+            <textarea [(ngModel)]="signupForm.bio" name="signupBio" rows="3"></textarea>
+          </label>
+          <label class="full">
+            <span>Profile picture URL</span>
+            <input [(ngModel)]="signupForm.profilePicUrl" name="signupProfilePicUrl" type="url" />
+          </label>
+          <button class="submit-btn" type="submit" [disabled]="working()">
+            @if (working()) {
+              <app-ui-icon name="spinner" [size]="15" />
+            }
+            <span>{{ working() ? 'Creating account...' : 'Create account' }}</span>
+          </button>
+        </form>
+      }
+
+      <div class="oauth-row">
+        <a class="oauth-btn" href="/oauth2/authorization/google">
+          <app-ui-icon name="google" [size]="16" />
+          <span>Google</span>
+        </a>
+        <a class="oauth-btn" href="/oauth2/authorization/github">
+          <app-ui-icon name="github" [size]="16" />
+          <span>GitHub</span>
+        </a>
+      </div>
+    </section>
+  </div>
+}

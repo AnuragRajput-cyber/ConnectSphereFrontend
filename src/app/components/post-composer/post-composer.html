@@ -1,0 +1,39 @@
+<section class="composer twitter-card">
+  <div class="composer-row">
+    <app-avatar
+      [src]="currentUser()?.profilePicUrl ?? null"
+      [name]="currentUser()?.fullName ?? 'User'"
+      [seed]="currentUser()?.userId ?? 'user'"
+      [size]="48"
+    />
+    <div class="composer-inputs">
+      <textarea
+        [ngModel]="content()"
+        (ngModelChange)="content.set($event)"
+        rows="3"
+        placeholder="What's happening?"
+      ></textarea>
+
+      @if (selectedFile()) {
+        <div class="file-chip">{{ selectedFile()?.name }}</div>
+      }
+    </div>
+  </div>
+
+  <div class="composer-actions">
+    <label class="media-btn" aria-label="Attach media">
+      <app-ui-icon name="image" [size]="18" />
+      <span>Media</span>
+      <input type="file" accept="image/*,video/*" (change)="onFileChange($event)" />
+    </label>
+
+    <button
+      class="composer-submit"
+      type="button"
+      [disabled]="busy() || (!content().trim() && !selectedFile())"
+      (click)="submit()"
+    >
+      {{ busy() ? 'Posting...' : 'Post' }}
+    </button>
+  </div>
+</section>

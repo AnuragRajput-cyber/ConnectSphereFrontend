@@ -1,0 +1,83 @@
+<aside class="sidebar">
+  <a class="brand" routerLink="/feed" aria-label="ConnectSphere home">
+    <app-ui-icon name="spark" [size]="28" [strokeWidth]="2" />
+  </a>
+
+  <nav class="nav" aria-label="Primary navigation">
+    @for (item of navItems; track item.route) {
+      <a class="nav-link" [routerLink]="item.route" routerLinkActive="active">
+        <span class="nav-icon">
+          <app-ui-icon [name]="item.icon" [size]="24" [strokeWidth]="1.9" />
+          @if (item.route === '/notifications' && unreadNotifications() > 0) {
+            <span class="badge accent">{{ unreadNotifications() }}</span>
+          }
+        </span>
+        <span class="nav-label">{{ item.label }}</span>
+      </a>
+    }
+    @if (isAdmin()) {
+      <a class="nav-link" routerLink="/admin/dashboard" routerLinkActive="active">
+        <span class="nav-icon">
+          <app-ui-icon name="spark" [size]="24" [strokeWidth]="1.9" />
+        </span>
+        <span class="nav-label">Admin</span>
+      </a>
+      <a class="nav-link" routerLink="/system/dashboard" routerLinkActive="active">
+        <span class="nav-icon">
+          <app-ui-icon name="menu" [size]="24" [strokeWidth]="1.9" />
+        </span>
+        <span class="nav-label">System</span>
+      </a>
+    }
+  </nav>
+
+  <a class="tweet-btn" routerLink="/create-post">Post</a>
+
+  <div class="sidebar-footer">
+    @if (isAuthenticated() && currentUser()) {
+      <a class="profile-summary" routerLink="/profile/me">
+        <app-avatar
+          [src]="currentUser()?.profilePicUrl ?? null"
+          [name]="currentUser()?.fullName ?? 'Profile'"
+          [seed]="currentUser()?.userId ?? 'profile'"
+          [size]="40"
+        />
+        <div class="summary-copy">
+          <strong>{{ currentUser()?.fullName }}</strong>
+          <span>@{{ currentUser()?.username }}</span>
+        </div>
+        <app-ui-icon name="dots" [size]="18" />
+      </a>
+      <button class="logout-btn" type="button" (click)="logoutRequested.emit()">Logout</button>
+    } @else {
+      <button class="auth-btn" type="button" (click)="authRequested.emit()">Sign in</button>
+    }
+  </div>
+</aside>
+
+<nav class="mobile-nav" aria-label="Mobile navigation">
+  <a class="mobile-link" routerLink="/feed" routerLinkActive="active" aria-label="Home">
+    <app-ui-icon name="home" [size]="22" />
+  </a>
+  <a class="mobile-link" routerLink="/discover" routerLinkActive="active" aria-label="Explore">
+    <app-ui-icon name="explore" [size]="22" />
+  </a>
+  <a class="mobile-link" routerLink="/create-post" routerLinkActive="active" aria-label="Post">
+    <app-ui-icon name="plus-square" [size]="22" />
+  </a>
+  <a class="mobile-link" routerLink="/notifications" routerLinkActive="active" aria-label="Notifications">
+    <app-ui-icon name="notifications" [size]="22" />
+  </a>
+  <a class="mobile-link" routerLink="/profile/me" routerLinkActive="active" aria-label="Profile">
+    @if (currentUser()) {
+      <app-avatar
+        [src]="currentUser()?.profilePicUrl ?? null"
+        [name]="currentUser()?.fullName ?? 'Profile'"
+        [seed]="currentUser()?.userId ?? 'profile'"
+        [size]="26"
+      />
+    } @else {
+      <app-ui-icon name="profile" [size]="22" />
+    }
+  </a>
+</nav>

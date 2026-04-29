@@ -1,0 +1,37 @@
+<section class="stories panel">
+  <div class="story-track">
+    @if (ownStory()) {
+      <button class="story-item story-button" type="button" (click)="openStory(ownStory()!)">
+        <span class="ring">
+          <img [src]="preview(ownStory()!)" alt="Your story" loading="lazy" />
+          @if (isVideo(ownStory()!)) {
+            <span class="story-badge">Video</span>
+          }
+        </span>
+        <span class="story-label">Your story</span>
+      </button>
+    }
+
+    @if (canCreate()) {
+      <label class="story-item add-story">
+        <span class="ring add">
+          <app-ui-icon name="plus" [size]="16" />
+        </span>
+        <span class="story-label">{{ ownStory() ? 'Add story' : 'Your story' }}</span>
+        <input type="file" accept="image/*,video/*" (change)="upload($event)" />
+      </label>
+    }
+
+    @for (story of otherStories(); track story.storyId) {
+      <button class="story-item story-button" type="button" (click)="openStory(story)">
+        <span class="ring">
+          <img [src]="preview(story)" [alt]="displayName(story.authorId)" loading="lazy" />
+          @if (isVideo(story)) {
+            <span class="story-badge">Video</span>
+          }
+        </span>
+        <span class="story-label">{{ displayName(story.authorId) }}</span>
+      </button>
+    }
+  </div>
+</section>

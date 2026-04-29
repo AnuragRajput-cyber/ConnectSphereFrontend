@@ -1,0 +1,40 @@
+<article class="comment-item" [class.nested]="nested()">
+  <button class="comment-avatar" type="button" (click)="profileRequested.emit(comment().authorId)">
+    <app-avatar
+      [src]="authorAvatar()"
+      [name]="authorName()"
+      [seed]="comment().authorId"
+      [size]="nested() ? 34 : 40"
+    />
+  </button>
+
+  <div class="bubble">
+    <button class="comment-head" type="button" (click)="profileRequested.emit(comment().authorId)">
+      <strong>{{ authorName() }}</strong>
+      @if (authorUsername()) {
+        <span>@{{ authorUsername() }}</span>
+      }
+      <small>{{ comment().createdAt | date: 'short' }}</small>
+    </button>
+    <p>{{ comment().content }}</p>
+
+    <div class="comment-actions">
+      @if (canLike()) {
+        <button class="comment-like" type="button" [class.active]="liked()" (click)="likeRequested.emit(comment().commentId)">
+          <app-ui-icon name="heart" [size]="14" [filled]="liked()" />
+          <span>{{ comment().likesCount }}</span>
+        </button>
+      }
+      @if (canReply()) {
+        <button class="comment-text-action" type="button" (click)="replyRequested.emit(comment().commentId)">Reply</button>
+      }
+      @if (canManage()) {
+        <button class="comment-text-action" type="button" (click)="editRequested.emit(comment().commentId)">Edit</button>
+        <button class="comment-text-action danger" type="button" (click)="deleteRequested.emit(comment().commentId)">Delete</button>
+      }
+      @if (canReport()) {
+        <button class="comment-text-action" type="button" (click)="reportRequested.emit(comment().commentId)">Report</button>
+      }
+    </div>
+  </div>
+</article>

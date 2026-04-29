@@ -1,0 +1,36 @@
+@if (loading()) {
+  <section class="twitter-page dashboard-page">
+    <div class="twitter-main">
+      <div class="twitter-empty">Loading system dashboard...</div>
+    </div>
+  </section>
+} @else if (!overview()) {
+  <app-empty-state
+    title="System overview unavailable"
+    message="Service health could not be loaded right now."
+  />
+} @else {
+  <section class="twitter-page dashboard-page">
+    <div class="twitter-main">
+      <header class="twitter-main-header dashboard-header">
+        <div>
+          <h1>System dashboard</h1>
+          <p>Live service availability snapshot for the ConnectSphere platform.</p>
+        </div>
+        <a class="dashboard-link" routerLink="/admin/dashboard">Admin dashboard</a>
+      </header>
+
+      <section class="service-grid">
+        @for (service of overview()!.services; track service.service) {
+          <article class="service-card">
+            <div class="service-topline">
+              <strong>{{ service.service }}</strong>
+              <span class="status-pill" [class.up]="isHealthy(service.status)">{{ service.status }}</span>
+            </div>
+            <p>{{ service.baseUrl }}</p>
+          </article>
+        }
+      </section>
+    </div>
+  </section>
+}

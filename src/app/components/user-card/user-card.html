@@ -1,0 +1,28 @@
+<article class="user-card" [class.compact]="compact()">
+  <button class="identity" type="button" (click)="profileRequested.emit(user().userId)">
+    <app-avatar
+      [src]="user().profilePicUrl"
+      [name]="user().fullName"
+      [seed]="user().userId"
+      [size]="compact() ? 44 : 52"
+    />
+    <div>
+      <strong>{{ user().fullName }}</strong>
+      <p>@{{ user().username }}</p>
+      @if (user().bio && !compact()) {
+        <small>{{ user().bio }}</small>
+      }
+    </div>
+  </button>
+
+  <div class="actions">
+    @if (showFollow() && !isSelf()) {
+      <button class="ghost-btn" type="button" [class.following]="following() || pending()" [class.pending]="pending()" (click)="followRequested.emit(user().userId)">
+        {{ followLabel() }}
+      </button>
+    }
+    @if (showMessage() && !isSelf()) {
+      <button class="ghost-btn" type="button" (click)="messageRequested.emit(user().userId)">Message</button>
+    }
+  </div>
+</article>

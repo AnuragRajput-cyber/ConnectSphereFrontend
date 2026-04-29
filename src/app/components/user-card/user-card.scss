@@ -1,0 +1,131 @@
+.user-card,
+.identity,
+.actions {
+  display: flex;
+  align-items: center;
+}
+
+.user-card {
+  justify-content: space-between;
+  flex-direction: row;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border-primary);
+  background: var(--surface);
+  transition: background-color var(--transition-base);
+
+  &:hover {
+    background: var(--surface-hover);
+  }
+
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  &.compact {
+    padding: var(--space-3) var(--space-4);
+  }
+}
+
+.identity {
+  flex: 1;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  flex-direction: row;
+  align-items: center;
+
+  > div {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  strong {
+    color: var(--text-primary);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-base);
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  p,
+  small {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.actions {
+  gap: var(--space-2);
+  flex-shrink: 0;
+}
+
+.ghost-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--accent);
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+
+  &:hover {
+    background: rgba(29, 155, 240, 0.1);
+  }
+
+  &.following {
+    border-color: var(--border-primary);
+    background: var(--surface);
+    color: var(--text-primary);
+
+    &:hover {
+      background: var(--error-light);
+      border-color: var(--error);
+      color: var(--error);
+    }
+  }
+
+  &.pending {
+    border-color: rgba(29, 155, 240, 0.2);
+    background: #f5f9ff;
+    color: var(--accent);
+  }
+}
+
+.msg-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  width: 36px;
+  padding: 0;
+  border: 1px solid var(--border-primary);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--accent);
+  cursor: pointer;
+  transition: all var(--transition-base);
+
+  &:hover {
+    background: rgba(29, 155, 240, 0.1);
+    border-color: var(--accent);
+  }
+}

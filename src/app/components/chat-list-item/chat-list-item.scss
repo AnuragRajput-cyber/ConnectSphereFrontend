@@ -1,0 +1,23 @@
+.chat-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.8rem;
+  align-items: center;
+  width: 100%;
+  padding: 0.95rem 1rem;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+}
+
+.chat-item.active,
+.chat-item:hover {
+  background: var(--surface-soft);
+}
+
+.chat-item p {
+  margin-top: 0.18rem;
+  color: var(--muted);
+}

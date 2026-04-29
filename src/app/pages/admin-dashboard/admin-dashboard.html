@@ -1,0 +1,198 @@
+@if (loading()) {
+  <section class="twitter-page dashboard-page">
+    <div class="twitter-main">
+      <div class="twitter-empty">Loading admin dashboard...</div>
+    </div>
+  </section>
+} @else if (!overview()) {
+  <app-empty-state
+    title="Dashboard unavailable"
+    message="Admin analytics could not be loaded right now."
+  />
+} @else {
+  <section class="twitter-page dashboard-page">
+    <div class="twitter-main">
+      <header class="twitter-main-header dashboard-header">
+        <div>
+          <h1>Admin dashboard</h1>
+          <p>Manage users, review moderation reports, and monitor platform activity.</p>
+        </div>
+        <a class="dashboard-link" routerLink="/system/dashboard">System dashboard</a>
+      </header>
+
+      <section class="stat-grid">
+        <article class="stat-card">
+          <span>Total users</span>
+          <strong>{{ overview()!.users.totalUsers }}</strong>
+        </article>
+        <article class="stat-card">
+          <span>Active users</span>
+          <strong>{{ overview()!.users.activeUsers }}</strong>
+        </article>
+        <article class="stat-card">
+          <span>Verified users</span>
+          <strong>{{ overview()!.users.verifiedUsers }}</strong>
+        </article>
+        <article class="stat-card">
+          <span>Admins</span>
+          <strong>{{ overview()!.users.admins }}</strong>
+        </article>
+      </section>
+
+      <section class="dashboard-section">
+        <div class="section-title">
+          <h2>Moderation queue</h2>
+        </div>
+        <div class="report-table">
+          @for (report of reports(); track report.reportId) {
+            <article class="report-row">
+              <div class="user-copy">
+                <strong>{{ report.targetType }} report</strong>
+                <p>{{ report.reason }} <span aria-hidden="true">&middot;</span> {{ report.targetId }}</p>
+                @if (report.details) {
+                  <small>{{ report.details }}</small>
+                }
+              </div>
+              <div class="row-actions">
+                @if (report.targetType === 'POST') {
+                  <button
+                    class="secondary-btn"
+                    type="button"
+                    [disabled]="busyReportId() === report.reportId"
+                    (click)="resolveReport(report, 'REMOVE_POST')"
+                  >
+                    Remove post
+                  </button>
+                }
+                @if (report.targetType === 'COMMENT') {
+                  <button
+                    class="secondary-btn"
+                    type="button"
+                    [disabled]="busyReportId() === report.reportId"
+                    (click)="resolveReport(report, 'REMOVE_COMMENT')"
+                  >
+                    Remove comment
+                  </button>
+                }
+                @if (report.targetType === 'USER') {
+                  <button
+                    class="secondary-btn"
+                    type="button"
+                    [disabled]="busyReportId() === report.reportId"
+                    (click)="resolveReport(report, 'SUSPEND_USER')"
+                  >
+                    Suspend user
+                  </button>
+                  <button
+                    class="danger-btn"
+                    type="button"
+                    [disabled]="busyReportId() === report.reportId"
+                    (click)="resolveReport(report, 'DELETE_USER')"
+                  >
+                    Delete user
+                  </button>
+                }
+                <button
+                  class="secondary-btn"
+                  type="button"
+                  [disabled]="busyReportId() === report.reportId"
+                  (click)="resolveReport(report, 'DISMISS')"
+                >
+                  Dismiss
+                </button>
+              </div>
+            </article>
+          } @empty {
+            <div class="dashboard-empty">No open reports right now.</div>
+          }
+        </div>
+      </section>
+
+      <section class="dashboard-section">
+        <div class="section-title">
+          <h2>Trending hashtags</h2>
+        </div>
+        <div class="tag-grid">
+          @for (tag of overview()!.trendingHashtags; track tag.hashtagId) {
+            <article class="tag-card">
+              <strong>#{{ tag.tag }}</strong>
+              <span>{{ tag.postCount }} posts</span>
+            </article>
+          } @empty {
+            <div class="dashboard-empty">No hashtags indexed yet.</div>
+          }
+        </div>
+      </section>
+
+      <section class="dashboard-section">
+        <div class="section-title">
+          <h2>User management</h2>
+        </div>
+        <div class="user-table">
+          @for (user of users(); track trackUser($index, user)) {
+            <article class="user-row">
+              <div class="user-copy">
+                <strong>{{ user.fullName }}</strong>
+                <p>@{{ user.username }} <span aria-hidden="true">&middot;</span> {{ user.email }}</p>
+                <small>{{ user.role }} <span aria-hidden="true">&middot;</span> {{ user.active ? 'Active' : 'Suspended' }}</small>
+              </div>
+              <div class="row-actions">
+                @if (user.active) {
+                  <button
+                    class="secondary-btn"
+                    type="button"
+                    [disabled]="busyUserId() === user.userId"
+                    (click)="suspend(user.userId)"
+                  >
+                    Suspend
+                  </button>
+                } @else {
+                  <button
+                    class="secondary-btn"
+                    type="button"
+                    [disabled]="busyUserId() === user.userId"
+                    (click)="reactivate(user.userId)"
+                  >
+                    Reactivate
+                  </button>
+                }
+                <button
+                  class="danger-btn"
+                  type="button"
+                  [disabled]="busyUserId() === user.userId"
+                  (click)="deleteUser(user.userId)"
+                >
+                  Delete
+                </button>
+              </div>
+            </article>
+          } @empty {
+            <div class="dashboard-empty">No users available.</div>
+          }
+        </div>
+      </section>
+
+      <section class="dashboard-section">
+        <div class="section-title">
+          <h2>Broadcast notifications</h2>
+        </div>
+        <div class="broadcast-card">
+          <textarea
+            [ngModel]="broadcastMessage()"
+            (ngModelChange)="broadcastMessage.set($event)"
+            rows="4"
+            placeholder="Send a platform-wide announcement"
+          ></textarea>
+          <button
+            class="secondary-btn"
+            type="button"
+            [disabled]="sendingBroadcast() || !broadcastMessage().trim()"
+            (click)="sendBroadcast()"
+          >
+            {{ sendingBroadcast() ? 'Sending...' : 'Send broadcast' }}
+          </button>
+        </div>
+      </section>
+    </div>
+  </section>
+}

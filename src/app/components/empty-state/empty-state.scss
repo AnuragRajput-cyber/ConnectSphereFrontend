@@ -1,0 +1,33 @@
+.empty-state {
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+
+.empty-mark {
+  width: 70px;
+  height: 70px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top, rgba(255, 95, 135, 0.18), transparent 58%),
+    linear-gradient(135deg, #fff2f4, #fff8f1);
+}
+
+.empty-state p {
+  max-width: 28rem;
+  margin: 0;
+  color: var(--muted);
+}
+
+.empty-state button {
+  min-height: 42px;
+  padding: 0 1.15rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}

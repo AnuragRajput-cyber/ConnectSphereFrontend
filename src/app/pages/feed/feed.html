@@ -1,0 +1,109 @@
+<section class="twitter-page">
+  <div class="twitter-main">
+    <header class="twitter-main-header">
+      <div>
+        <h1>Home</h1>
+      </div>
+      <button class="top-action" type="button" routerLink="/discover" aria-label="Explore">
+        <app-ui-icon name="spark" [size]="20" />
+      </button>
+    </header>
+
+    <app-post-composer
+      [currentUser]="currentUser()"
+      [busy]="composing()"
+      (submitted)="createPost($event)"
+      (authRequested)="openAuth()"
+    />
+
+    <app-story-bar
+      [stories]="stories()"
+      [canCreate]="!!currentUser()"
+      [currentUserId]="currentUser()?.userId ?? null"
+      (createStory)="createStory($event)"
+      (storySelected)="openStory($event)"
+    />
+
+    @if (loading()) {
+      <div class="twitter-empty">Loading your live feed...</div>
+    } @else if (!cards().length) {
+      <div class="twitter-empty">
+        <h3>Nothing to show yet</h3>
+      </div>
+    } @else {
+      <div class="twitter-list">
+        @for (card of visibleCards(); track card.post.postId) {
+          <app-post-card
+            [view]="card"
+            [currentUserId]="currentUser()?.userId ?? null"
+            [liked]="liked(card.post.postId)"
+            [reactionType]="reactionType(card.post.postId)"
+            [likedCommentIds]="likedCommentIds()"
+            (authRequested)="openAuth()"
+            (likeToggled)="toggleLike($event)"
+            (reactionChanged)="setReaction($event)"
+            (commentsRequested)="loadComments($event)"
+            (commentSubmitted)="addComment($event)"
+            (commentUpdated)="updateComment($event)"
+            (commentDeleted)="deleteComment($event)"
+            (commentReported)="reportComment($event)"
+            (commentLikeToggled)="toggleCommentLike($event)"
+            (shareRequested)="share(card.post.postId)"
+            (profileRequested)="openProfile($event)"
+            (postRequested)="openPost($event)"
+          />
+        }
+      </div>
+    }
+  </div>
+
+  <app-right-sidebar
+    [currentUser]="currentUser()"
+    [discoverUsers]="discoverUsers()"
+    [followingIds]="discoverFollowingIds()"
+    [pendingIds]="discoverPendingIds()"
+    [trending]="trending()"
+    (followClicked)="followUser($event)"
+    (profileClicked)="openProfile($event)"
+    (authRequested)="openAuth()"
+  />
+
+  @if (sharePostId()) {
+    <app-share-sheet
+      [recipients]="shareRecipients()"
+      [sendingToId]="sharingToId()"
+      (closed)="closeShareSheet()"
+      (shared)="shareToUser($event)"
+    />
+  }
+
+  @if (selectedStory()) {
+    <div class="story-viewer" role="dialog" aria-modal="true">
+      <div class="story-scrim" (click)="closeStory()"></div>
+      <div class="story-panel">
+        <button class="story-close" type="button" (click)="closeStory()" aria-label="Close story">
+          <app-ui-icon name="close" [size]="18" />
+        </button>
+
+        <div class="story-media">
+          @if (selectedStory()!.mediaType === 'VIDEO') {
+            <video [src]="selectedStory()!.mediaUrl" autoplay muted playsinline controls></video>
+          } @else {
+            <img [src]="selectedStory()!.mediaUrl" alt="Story media" />
+          }
+        </div>
+
+        <div class="story-meta">
+          <div class="story-meta-left">
+            <strong>{{ directory.displayName(selectedStory()!.authorId) }}</strong>
+            <span>{{ selectedStory()!.createdAt | date: 'short' }}</span>
+          </div>
+          <button class="story-like" type="button" [class.active]="storyLiked()" (click)="toggleStoryLike()">
+            <app-ui-icon name="heart" [size]="18" />
+            <span>{{ storyLikeCount() }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+</section>

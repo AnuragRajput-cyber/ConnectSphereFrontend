@@ -1,0 +1,57 @@
+<section class="profile-header panel">
+  <div class="profile-topbar">
+    <div class="username-row">
+      <strong>{{ user().username }}</strong>
+    </div>
+  </div>
+
+  <div class="profile-body">
+    <div class="avatar-column">
+      <div class="story-ring">
+        <app-avatar
+          class="profile-avatar"
+          [src]="user().profilePicUrl"
+          [name]="user().fullName"
+          [seed]="user().userId"
+          [size]="86"
+        />
+      </div>
+    </div>
+
+    <div class="profile-copy">
+      <div class="name-row">
+        <strong>{{ user().fullName }}</strong>
+      </div>
+
+      <div class="stats">
+        <article>
+          <strong>{{ counts().posts }}</strong>
+          <span>Posts</span>
+        </article>
+        <article>
+          <strong>{{ counts().followers }}</strong>
+          <span>Followers</span>
+        </article>
+        <article>
+          <strong>{{ counts().following }}</strong>
+          <span>Following</span>
+        </article>
+      </div>
+
+      <div class="bio-block">
+        <p class="bio">{{ user().bio || 'No bio added yet.' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    @if (ownProfile()) {
+      <button class="ghost-btn full" type="button" (click)="editRequested.emit()">Edit Profile</button>
+    } @else {
+      <button class="primary-btn" [class.pending]="pending()" type="button" [disabled]="followPending()" (click)="followRequested.emit()">
+        {{ followLabel() }}
+      </button>
+      <button class="ghost-btn" type="button" (click)="messageRequested.emit()">Message</button>
+    }
+  </div>
+</section>
