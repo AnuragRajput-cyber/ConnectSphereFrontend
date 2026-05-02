@@ -1,0 +1,235 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angular Frontend Architecture Guide</title>
+    <style>
+        :root {
+            --ink: #1f3344;
+            --muted: #627588;
+            --line: #dce4eb;
+            --panel: #f7fafc;
+            --soft: #eaf2fb;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: var(--ink);
+            background: white;
+        }
+
+        .page {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 34px 38px 72px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 31px;
+        }
+
+        h2 {
+            margin: 30px 0 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--line);
+            font-size: 23px;
+        }
+
+        h3 {
+            margin: 0 0 10px;
+            font-size: 18px;
+        }
+
+        p, li {
+            line-height: 1.6;
+        }
+
+        .lead {
+            color: var(--muted);
+            margin-bottom: 18px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin: 16px 0 24px;
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 14px 16px;
+        }
+
+        .meta-table, .file-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        .meta-table th,
+        .meta-table td,
+        .file-table th,
+        .file-table td {
+            border: 1px solid var(--line);
+            padding: 9px 10px;
+            vertical-align: top;
+            font-size: 13px;
+            line-height: 1.55;
+        }
+
+        .meta-table th,
+        .file-table th {
+            background: var(--soft);
+            text-align: left;
+        }
+
+        code {
+            font-family: Consolas, "Courier New", monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        ul {
+            margin: 10px 0 0;
+            padding-left: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <h1>Angular Frontend Architecture Guide</h1>
+    <p class="lead">
+        Generated on 2026-04-20 12:38:36 from the current workspace. This guide explains the purpose, structure,
+        internal working, service connections, and important files for <strong>connectsphere-web</strong>.
+    </p>
+    <p>The Angular frontend is a lightweight assessment-ready client designed to stay readable while still touching all major platform services. It has a social-dashboard layout inspired by Twitter, Instagram, and Facebook, but keeps the code intentionally simple.</p>
+<p>The app contains feed, explore, profile, notifications, stories, and chat pages, plus a shared session panel that handles login and registration through auth-service.</p>
+
+    <h2>Architecture Snapshot</h2>
+    <table class="meta-table">
+        <tr><th style="width:24%">Module</th><td>connectsphere-web</td></tr>
+        <tr><th>Type</th><td>Angular standalone frontend</td></tr>
+        <tr><th>Port / Entry</th><td>4200 (served through gateway paths on 8080 during development)</td></tr>
+        <tr><th>Data Ownership</th><td>None</td></tr>
+        <tr><th>Protocols / Main Tech</th><td>Angular, HttpClient, router, STOMP/SockJS</td></tr>
+        <tr><th>Verification Command</th><td><code>npm run build and npm test -- --watch=false</code></td></tr>
+        <tr><th>Key Endpoints or Routes</th><td><code>/feed</code><br><code>/explore</code><br><code>/profile</code><br><code>/notifications</code><br><code>/stories</code><br><code>/chat</code><br><code>/oauth2/authorization/google</code><br><code>/oauth2/authorization/github</code></td></tr>
+    </table>
+
+    <div class="summary-grid">
+        <section class="card">
+            <h3>Responsibilities</h3>
+            <ul>
+                <li>Host a clean UI shell and route pages</li>
+<li>Store auth session locally and send bearer tokens</li>
+<li>Call backend services through the gateway</li>
+<li>Render stories, notifications, follow suggestions, and realtime chat</li>
+<li>Provide a simple but attractive microservice demo surface</li>
+            </ul>
+        </section>
+        <section class="card">
+            <h3>Integrations</h3>
+            <ul>
+                <li>Uses gateway-relative URLs everywhere</li>
+<li>Uses auth-service for session state</li>
+<li>Uses post/comment/like/follow/notification/media/search/chat services across pages</li>
+<li>Uses proxy config for local Angular development</li>
+            </ul>
+        </section>
+    </div>
+
+    <h2>Internal Working</h2>
+    <section class="card">
+        <ul>
+            <li>Session flow: the right-side shell logs users in or registers them through auth-service, stores the JWT pair in local storage, and refreshes the profile into reactive session state.</li>
+<li>Feed flow: the feed page loads followed-user relationships, requests post-service feed data, then orchestrates comment-service and like-service actions from one UI card.</li>
+<li>Explore flow: the page combines auth-service user search, post-service delegated search through search-service, trending hashtags, and follow suggestions.</li>
+<li>Stories flow: the stories page uploads multipart files to media-service and previews active stories returned from the service.</li>
+<li>Chat flow: the chat page uses REST endpoints for history and STOMP/SockJS for live conversation updates through the gateway websocket route.</li>
+        </ul>
+    </section>
+
+    <h2>File Inventory</h2>
+    <p>
+        The table below lists the important source, configuration, and test files that currently exist in the module.
+        This is meant to help you explain how the module is connected internally when you present it or revise it later.
+    </p>
+    <table class="file-table">
+        <thead>
+            <tr>
+                <th style="width:34%">File</th>
+                <th>Description and why it matters</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><code>angular.json</code></td><td>Angular workspace configuration describing build targets, dev-server behavior, proxying, and optimization settings.</td></tr>
+<tr><td><code>package.json</code></td><td>Frontend dependency and script manifest used to install, build, serve, and test the Angular application.</td></tr>
+<tr><td><code>README.md</code></td><td>Human-readable runbook describing what the module does, how to start it, and what endpoints or features it exposes.</td></tr>
+<tr><td><code>src\app\app.config.ts</code></td><td>Supporting source file that contributes to the module's implementation, build, or verification story.</td></tr>
+<tr><td><code>src\app\app.html</code></td><td>Root Angular shell for global layout, session controls, and router hosting.</td></tr>
+<tr><td><code>src\app\app.routes.ts</code></td><td>Angular route table mapping URL paths to the major frontend pages.</td></tr>
+<tr><td><code>src\app\app.scss</code></td><td>Root Angular shell for global layout, session controls, and router hosting.</td></tr>
+<tr><td><code>src\app\app.spec.ts</code></td><td>Supporting source file that contributes to the module's implementation, build, or verification story.</td></tr>
+<tr><td><code>src\app\app.ts</code></td><td>Root Angular shell for global layout, session controls, and router hosting.</td></tr>
+<tr><td><code>src\app\core\chat-realtime.service.ts</code></td><td>Shared Angular client logic used across multiple pages for session state, API requests, models, and realtime communication.</td></tr>
+<tr><td><code>src\app\core\connectsphere-api.service.ts</code></td><td>Shared Angular client logic used across multiple pages for session state, API requests, models, and realtime communication.</td></tr>
+<tr><td><code>src\app\core\session.service.ts</code></td><td>Shared Angular client logic used across multiple pages for session state, API requests, models, and realtime communication.</td></tr>
+<tr><td><code>src\app\core\social.models.ts</code></td><td>Shared Angular client logic used across multiple pages for session state, API requests, models, and realtime communication.</td></tr>
+<tr><td><code>src\app\pages\chat\chat.html</code></td><td>Standalone Angular route/page implementing one user-facing slice of the ConnectSphere frontend.</td></tr>
+<tr><td><code>src\app\pages\chat\chat.scss</code></td><td>Standalone Angular route/page implementing one user-facing slice of the ConnectSphere frontend.</td></tr>
+<tr><td><code>src\app\pages\chat\chat.ts</code></td><td>Standalone Angular route/page implementing one user-facing slice of the ConnectSphere frontend.</td></tr>
+<tr><td><code>src\app\pages\explore\explore.html</code></td><td>Standalone Angular route/page implementing one user-facing slice of the ConnectSphere frontend.</td></tr>
+<tr><td><code>src\app\pages\explore\explore.scss</code></td><td>Standalone Angular route/page implementing one user-facing slice of the ConnectSphere frontend.</td></tr>
+<tr><td><code>src\app\pages\explore\explore.ts</code></td><td>Standalone Angular route/page implementing one user-facing slice of the ConnectSphere frontend.</td></tr>
+<tr><td><code>src\app\pages\feed\feed.html</code></td><td>Standalone Angular route/page implementing one user-facing slice of the ConnectSphere frontend.</td></tr>
+<tr><td><code>src\app\pages\feed\feed.scss</code></td><td>Standalone Angular route/page implementing one user-facing slice of the ConnectSphere frontend.</td></tr>
+<tr><td><code>src\app\pages\feed\feed.ts</code></td><td>Standalone Angular route/page implementing one user-facing slice of the ConnectSphere frontend.</td></tr>
+<tr><td><code>src\app\pages\notifications\notifications.html</code></td><td>Standalone Angular route/page implementing one user-facing slice of the ConnectSphere frontend.</td></tr>
+<tr><td><code>src\app\pages\notifications\notifications.scss</code></td><td>Standalone Angular route/page implementing one user-facing slice of the ConnectSphere frontend.</td></tr>
+<tr><td><code>src\app\pages\notifications\notifications.ts</code></td><td>Standalone Angular route/page implementing one user-facing slice of the ConnectSphere frontend.</td></tr>
+<tr><td><code>src\app\pages\profile\profile.html</code></td><td>Standalone Angular route/page implementing one user-facing slice of the ConnectSphere frontend.</td></tr>
+<tr><td><code>src\app\pages\profile\profile.scss</code></td><td>Standalone Angular route/page implementing one user-facing slice of the ConnectSphere frontend.</td></tr>
+<tr><td><code>src\app\pages\profile\profile.ts</code></td><td>Standalone Angular route/page implementing one user-facing slice of the ConnectSphere frontend.</td></tr>
+<tr><td><code>src\app\pages\stories\stories.html</code></td><td>Standalone Angular route/page implementing one user-facing slice of the ConnectSphere frontend.</td></tr>
+<tr><td><code>src\app\pages\stories\stories.scss</code></td><td>Standalone Angular route/page implementing one user-facing slice of the ConnectSphere frontend.</td></tr>
+<tr><td><code>src\app\pages\stories\stories.ts</code></td><td>Standalone Angular route/page implementing one user-facing slice of the ConnectSphere frontend.</td></tr>
+<tr><td><code>src\index.html</code></td><td>Supporting source file that contributes to the module's implementation, build, or verification story.</td></tr>
+<tr><td><code>src\main.ts</code></td><td>Supporting source file that contributes to the module's implementation, build, or verification story.</td></tr>
+<tr><td><code>src\proxy.conf.json</code></td><td>Angular dev-server proxy so frontend requests can reach the gateway and websocket endpoints during local development.</td></tr>
+<tr><td><code>src\styles.scss</code></td><td>Supporting source file that contributes to the module's implementation, build, or verification story.</td></tr>
+        </tbody>
+    </table>
+
+    <h2>Assessment Notes</h2>
+    <section class="card">
+        <p>Current file inventory count: <strong>35</strong></p>
+        <p>
+            This guide focuses on how the module works end to end: what it owns, which requests it handles,
+            what supporting files make it run, and how it connects to the rest of ConnectSphere.
+        </p>
+    </section>
+</div>
+</body>
+</html>
