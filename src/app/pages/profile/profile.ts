@@ -424,8 +424,9 @@ export class Profile {
         }
       }
 
+      const postsRequest = this.api.getPostsByUser(targetUserId);
       const [posts, postCount, followers, following, trending, discoverUsers, currentFollowing, outgoingPending] = await Promise.all([
-        this.api.getPostsByUser(targetUserId).catch(() => []),
+        postsRequest,
         this.api.getPostCount(targetUserId).catch(() => ({ authorId: targetUserId, count: 0 })),
         this.api.getFollowerCount(targetUserId).catch(() => ({ count: 0 })),
         this.api.getFollowingCount(targetUserId).catch(() => ({ count: 0 })),
@@ -460,6 +461,8 @@ export class Profile {
         followers: followers.count,
         following: following.count,
       });
+    } catch {
+      this.toast.show('Profile posts unavailable', 'Post-service could not return this profile timeline.', 'warning');
     } finally {
       this.loading.set(false);
     }
@@ -485,6 +488,6 @@ export class Profile {
       }
     }
 
-    return this.api.searchUsersViaSearch('a').catch(() => []);
+    return this.api.searchUsersViaSearch('').catch(() => []);
   }
 }

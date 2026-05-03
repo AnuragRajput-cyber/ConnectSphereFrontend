@@ -16,13 +16,15 @@
       (authRequested)="openAuth()"
     />
 
-    <app-story-bar
-      [stories]="stories()"
-      [canCreate]="!!currentUser()"
-      [currentUserId]="currentUser()?.userId ?? null"
-      (createStory)="createStory($event)"
-      (storySelected)="openStory($event)"
-    />
+    @if (currentUser()) {
+      <app-story-bar
+        [stories]="stories()"
+        [canCreate]="true"
+        [currentUserId]="currentUser()!.userId"
+        (createStory)="createStory($event)"
+        (storySelected)="openStory($event)"
+      />
+    }
 
     @if (loading()) {
       <div class="twitter-empty">Loading your live feed...</div>

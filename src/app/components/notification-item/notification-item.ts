@@ -18,4 +18,8 @@ export class NotificationItemComponent {
   readonly opened = output<NotificationResponse>();
   readonly marked = output<string>();
   readonly removed = output<string>();
+
+  message(): string {
+    return this.item().message.replace(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\s+/i, '');
+  }
 }

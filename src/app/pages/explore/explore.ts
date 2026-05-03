@@ -177,7 +177,7 @@ export class Explore {
       if (!query) {
         const trending = await this.api.getTrendingHashtags().catch(() => []);
         hashtags = trending;
-        users = await this.api.searchUsersViaSearch('a').catch(() => []);
+        users = await this.api.searchUsersViaSearch('').catch(() => []);
 
         const ids = Array.from(
           new Set(

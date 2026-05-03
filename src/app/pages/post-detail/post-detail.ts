@@ -46,12 +46,20 @@ export class PostDetailPage {
   readonly expandedThreads = signal<Record<string, true>>({});
   readonly loadingRepliesFor = signal<Record<string, true>>({});
   readonly repliesByCommentId = signal<Record<string, CommentResponse[]>>({});
+  readonly focusedCommentId = signal<string | null>(null);
   readonly shareRecipients = signal<UserSummary[]>([]);
   readonly shareOpen = signal(false);
   readonly sharingToId = signal<string | null>(null);
 
   constructor() {
     this.route.paramMap.subscribe((params) => this.postId.set(params.get('postId')));
+    this.route.queryParamMap.subscribe((params) => {
+      const commentId = params.get('comment');
+      this.focusedCommentId.set(commentId);
+      if (commentId && this.comments().length) {
+        void this.revealCommentThread(commentId);
+      }
+    });
 
     effect(() => {
       this.postId();
@@ -199,6 +207,7 @@ export class PostDetailPage {
         authorId: user.userId,
         content: text,
       });
+      await this.notifyMentions(user.userId, text, comment.commentId, 'COMMENT').catch(() => undefined);
       this.comments.update((items) => [...items, comment]);
       this.post.update((value) => value ? { ...value, commentsCount: value.commentsCount + 1 } : value);
       this.commentDraft.set('');
@@ -227,8 +236,8 @@ export class PostDetailPage {
   async openReply(commentId: string): Promise<void> {
     this.replyingToId.set(this.replyingToId() === commentId ? null : commentId);
     this.replyDraft.set('');
-    if (this.replyingToId()) {
-      await this.toggleThread(commentId);
+    if (this.replyingToId() && !this.threadExpanded(commentId)) {
+      await this.openThread(commentId);
     }
   }
 
@@ -316,6 +325,7 @@ export class PostDetailPage {
         content: text,
         parentCommentId,
       });
+      await this.notifyMentions(user.userId, text, reply.commentId, 'COMMENT').catch(() => undefined);
       this.repliesByCommentId.update((state) => ({
         ...state,
         [parentCommentId]: [...(state[parentCommentId] ?? []), reply],
@@ -493,6 +503,10 @@ export class PostDetailPage {
 
       this.author.set(author);
       this.comments.set(comments);
+      const focusedCommentId = this.focusedCommentId();
+      if (focusedCommentId) {
+        await this.revealCommentThread(focusedCommentId);
+      }
       this.relatedPosts.set(
         relatedPosts
           .filter((item) => item.postId !== post.postId && !item.deleted)
@@ -525,6 +539,27 @@ export class PostDetailPage {
       );
     } finally {
       this.loading.set(false);
+    }
+  }
+
+  private async openThread(commentId: string): Promise<void> {
+    this.expandedThreads.update((state) => ({ ...state, [commentId]: true }));
+    if (!this.repliesByCommentId()[commentId]) {
+      await this.loadReplies(commentId);
+    }
+  }
+
+  private async revealCommentThread(commentId: string): Promise<void> {
+    const topLevel = this.comments().find((comment) => comment.commentId === commentId);
+    if (topLevel) {
+      await this.openThread(topLevel.commentId);
+      return;
+    }
+
+    const comment = await this.api.getComment(commentId).catch(() => null);
+    const parentCommentId = comment?.parentCommentId;
+    if (parentCommentId) {
+      await this.openThread(parentCommentId);
     }
   }
 
@@ -606,5 +641,44 @@ export class PostDetailPage {
     } catch {
       this.toast.show('Report failed', 'Could not submit the moderation report.', 'warning');
     }
+  }
+
+  private async notifyMentions(
+    actorId: string,
+    content: string,
+    targetId: string,
+    targetType: 'POST' | 'COMMENT',
+  ): Promise<void> {
+    const usernames = this.extractMentions(content);
+    if (!usernames.length) {
+      return;
+    }
+
+    for (const username of usernames) {
+      const matches = await this.api.searchUsersViaSearch(username).catch(() => []);
+      const target = matches.find((item) => item.username.toLowerCase() === username.toLowerCase());
+      if (!target || target.userId === actorId) {
+        continue;
+      }
+
+      await this.api.createNotification({
+        recipientId: target.userId,
+        actorId,
+        type: 'MENTION',
+        message: targetType === 'COMMENT' ? 'mentioned you in a comment' : 'mentioned you in a post',
+        targetId,
+        targetType,
+      }).catch(() => undefined);
+    }
+  }
+
+  private extractMentions(content: string): string[] {
+    const found = new Set<string>();
+    const regex = /(^|\s)@([a-zA-Z0-9_]{3,50})\b/g;
+    let match: RegExpExecArray | null;
+    while ((match = regex.exec(content)) !== null) {
+      found.add(match[2]);
+    }
+    return Array.from(found);
   }
 }
