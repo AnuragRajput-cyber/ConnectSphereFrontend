@@ -52,6 +52,12 @@
 .two-col {
   grid-template-columns: 1fr 1fr;
   gap: 0.9rem;
+  align-items: end;
+}
+
+.field,
+.upload-field {
+  min-width: 0;
 }
 
 select,
@@ -65,7 +71,34 @@ textarea {
 }
 
 select {
-  min-height: 52px;
+  height: 52px;
+  appearance: none;
+  padding-right: 2.75rem;
+  background-color: #fff;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+    linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position:
+    calc(100% - 20px) 50%,
+    calc(100% - 14px) 50%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+select:hover,
+select:focus,
+textarea:focus,
+.upload-control:focus-within {
+  border-color: rgba(29, 155, 240, 0.5);
+  box-shadow: 0 0 0 4px rgba(29, 155, 240, 0.1);
+  outline: none;
+}
+
+select option {
+  color: var(--ink);
+  background: #fff;
+  font: inherit;
 }
 
 textarea {
@@ -76,11 +109,12 @@ textarea {
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  min-height: 52px;
-  padding: 0.45rem 0.65rem;
+  height: 52px;
+  padding: 0 0.65rem;
   border: 1px solid var(--border);
   border-radius: 16px;
   background: #fff;
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
 }
 
 .upload-trigger {
@@ -248,6 +282,8 @@ textarea {
   .upload-control {
     display: grid;
     justify-items: start;
+    height: auto;
+    min-height: 56px;
     padding: 14px;
     border-radius: 20px;
   }

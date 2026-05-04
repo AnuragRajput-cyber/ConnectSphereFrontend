@@ -5,12 +5,13 @@ import { FeedCardView } from '../../core/social.models';
 import { UserDirectoryService } from '../../core/user-directory.service';
 import { AvatarComponent } from '../avatar/avatar';
 import { CommentItemComponent } from '../comment-item/comment-item';
+import { MentionTextComponent } from '../mention-text/mention-text';
 import { UiIconComponent } from '../ui-icon/ui-icon';
 
 @Component({
   selector: 'app-post-card',
   standalone: true,
-  imports: [CommonModule, FormsModule, UiIconComponent, AvatarComponent, CommentItemComponent],
+  imports: [CommonModule, FormsModule, UiIconComponent, AvatarComponent, CommentItemComponent, MentionTextComponent],
   templateUrl: './post-card.html',
   styleUrl: './post-card.scss',
 })

@@ -367,24 +367,25 @@ export class ConnectSphereApiService {
     following: FollowResponse[] = [],
     limit = 8,
   ): Promise<UserSummary[]> {
-    const activeFollowing = following.length ? following : await this.getFollowing(userId).catch(() => []);
+    const activeFollowing = (following.length ? following : await this.getFollowing(userId).catch(() => []))
+      .filter((item) => item.status === 'ACTIVE');
     const followingIds = new Set(activeFollowing.map((item) => item.followeeId));
     const suggestedIds = await this.getSuggestedUsers(userId).catch(() => []);
-    const secondDegreeIds = suggestedIds.length
-      ? suggestedIds
-      : Array.from(
-          new Set(
-            (
-              await Promise.all(
-                Array.from(followingIds)
-                  .slice(0, 10)
-                  .map((followeeId) => this.getFollowing(followeeId).catch(() => [])),
-              )
-            )
-              .flat()
-              .map((item) => item.followeeId),
-          ),
-        );
+    const traversalIds = Array.from(
+      new Set(
+        (
+          await Promise.all(
+            Array.from(followingIds)
+              .slice(0, 10)
+              .map((followeeId) => this.getFollowing(followeeId).catch(() => [])),
+          )
+        )
+        .flat()
+        .filter((item) => item.status === 'ACTIVE')
+        .map((item) => item.followeeId),
+      ),
+    );
+    const secondDegreeIds = Array.from(new Set([...suggestedIds, ...traversalIds]));
 
     const filteredIds = secondDegreeIds
       .filter((candidateId) => candidateId !== userId && !followingIds.has(candidateId))

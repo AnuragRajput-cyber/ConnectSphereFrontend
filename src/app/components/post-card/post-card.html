@@ -24,7 +24,7 @@
 
       @if (view().post.content) {
         <button class="post-copy" type="button" (click)="postRequested.emit(view().post.postId)">
-          {{ view().post.content }}
+          <app-mention-text [text]="view().post.content" />
         </button>
       }
 

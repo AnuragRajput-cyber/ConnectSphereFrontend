@@ -45,7 +45,7 @@
         </div>
 
         @if (post()!.content) {
-          <p class="detail-copy">{{ post()!.content }}</p>
+          <p class="detail-copy"><app-mention-text [text]="post()!.content" /></p>
         }
 
         @if (post()!.mediaUrls.length) {

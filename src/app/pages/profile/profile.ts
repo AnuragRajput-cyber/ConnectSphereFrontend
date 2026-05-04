@@ -3,6 +3,7 @@ import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EmptyStateComponent } from '../../components/empty-state/empty-state';
+import { MentionTextComponent } from '../../components/mention-text/mention-text';
 import { ProfileHeaderComponent } from '../../components/profile-header/profile-header';
 import { RightSidebarComponent } from '../../components/right-sidebar/right-sidebar';
 import { UiIconComponent } from '../../components/ui-icon/ui-icon';
@@ -17,7 +18,7 @@ import { UserDirectoryService } from '../../core/user-directory.service';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, ProfileHeaderComponent, RightSidebarComponent, EmptyStateComponent, UiIconComponent, UserCardComponent],
+  imports: [CommonModule, FormsModule, RouterLink, ProfileHeaderComponent, RightSidebarComponent, EmptyStateComponent, UiIconComponent, UserCardComponent, MentionTextComponent],
   templateUrl: './profile.html',
   styleUrl: './profile.scss',
 })

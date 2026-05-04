@@ -61,13 +61,13 @@
   strong {
     color: var(--text-primary);
     font-weight: var(--font-weight-bold);
-    font-size: 16px;
+    font-size: 15px;
     transition: color var(--transition-base);
   }
 
   span {
     color: var(--text-secondary);
-    font-size: 15px;
+    font-size: 14px;
   }
 }
 
@@ -93,8 +93,8 @@
 
 .post-copy {
   color: var(--text-primary);
-  font-size: 16px;
-  line-height: 1.55;
+  font-size: 15px;
+  line-height: 1.48;
   text-align: left;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -302,7 +302,7 @@
 
   .post-copy {
     font-size: 15px;
-    line-height: 1.48;
+    line-height: 1.45;
   }
 
   .media-frame,

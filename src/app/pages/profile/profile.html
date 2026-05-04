@@ -180,7 +180,7 @@
                 <span>{{ post.createdAt | date: 'short' }}</span>
               </div>
               @if (post.content) {
-                <p class="post-copy">{{ post.content }}</p>
+                <p class="post-copy"><app-mention-text [text]="post.content" /></p>
               }
               @if (post.mediaUrls[0]) {
                 <div class="post-media">

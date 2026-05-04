@@ -1,0 +1,10 @@
+:host {
+  display: inline;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.mention {
+  color: var(--accent);
+  font-weight: 700;
+}

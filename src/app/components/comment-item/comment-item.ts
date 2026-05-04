@@ -2,12 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, input, output } from '@angular/core';
 import { CommentResponse } from '../../core/social.models';
 import { AvatarComponent } from '../avatar/avatar';
+import { MentionTextComponent } from '../mention-text/mention-text';
 import { UiIconComponent } from '../ui-icon/ui-icon';
 
 @Component({
   selector: 'app-comment-item',
   standalone: true,
-  imports: [CommonModule, AvatarComponent, UiIconComponent],
+  imports: [CommonModule, AvatarComponent, UiIconComponent, MentionTextComponent],
   templateUrl: './comment-item.html',
   styleUrl: './comment-item.scss',
 })

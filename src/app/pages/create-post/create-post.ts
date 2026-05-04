@@ -105,7 +105,8 @@ export class CreatePostPage {
     }
 
     for (const username of usernames) {
-      const matches = await this.api.searchUsersViaSearch(username).catch(() => []);
+      const matches = await this.api.searchUsersViaSearch(username)
+        .catch(() => this.api.searchUsers(username).catch(() => []));
       const target = matches.find((item) => item.username.toLowerCase() === username.toLowerCase());
       if (!target || target.userId === actorId) {
         continue;
@@ -124,10 +125,10 @@ export class CreatePostPage {
 
   private extractMentions(content: string): string[] {
     const found = new Set<string>();
-    const regex = /(^|\s)@([a-zA-Z0-9_]{3,50})\b/g;
+    const regex = /@([A-Za-z0-9_]{3,50})\b/g;
     let match: RegExpExecArray | null;
     while ((match = regex.exec(content)) !== null) {
-      found.add(match[2]);
+      found.add(match[1]);
     }
     return Array.from(found);
   }

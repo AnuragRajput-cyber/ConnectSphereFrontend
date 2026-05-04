@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AvatarComponent } from '../../components/avatar/avatar';
 import { CommentItemComponent } from '../../components/comment-item/comment-item';
 import { EmptyStateComponent } from '../../components/empty-state/empty-state';
+import { MentionTextComponent } from '../../components/mention-text/mention-text';
 import { ShareSheetComponent } from '../../components/share-sheet/share-sheet';
 import { UiIconComponent } from '../../components/ui-icon/ui-icon';
 import { ConnectSphereApiService } from '../../core/connectsphere-api.service';
@@ -16,7 +17,7 @@ import { UserDirectoryService } from '../../core/user-directory.service';
 @Component({
   selector: 'app-post-detail-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, AvatarComponent, CommentItemComponent, EmptyStateComponent, ShareSheetComponent, UiIconComponent],
+  imports: [CommonModule, FormsModule, AvatarComponent, CommentItemComponent, EmptyStateComponent, ShareSheetComponent, UiIconComponent, MentionTextComponent],
   templateUrl: './post-detail.html',
   styleUrl: './post-detail.scss',
 })
@@ -655,7 +656,8 @@ export class PostDetailPage {
     }
 
     for (const username of usernames) {
-      const matches = await this.api.searchUsersViaSearch(username).catch(() => []);
+      const matches = await this.api.searchUsersViaSearch(username)
+        .catch(() => this.api.searchUsers(username).catch(() => []));
       const target = matches.find((item) => item.username.toLowerCase() === username.toLowerCase());
       if (!target || target.userId === actorId) {
         continue;
@@ -674,10 +676,10 @@ export class PostDetailPage {
 
   private extractMentions(content: string): string[] {
     const found = new Set<string>();
-    const regex = /(^|\s)@([a-zA-Z0-9_]{3,50})\b/g;
+    const regex = /@([A-Za-z0-9_]{3,50})\b/g;
     let match: RegExpExecArray | null;
     while ((match = regex.exec(content)) !== null) {
-      found.add(match[2]);
+      found.add(match[1]);
     }
     return Array.from(found);
   }

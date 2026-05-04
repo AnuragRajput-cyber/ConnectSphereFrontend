@@ -16,7 +16,7 @@
       }
       <small>{{ comment().createdAt | date: 'short' }}</small>
     </button>
-    <p>{{ comment().content }}</p>
+    <p><app-mention-text [text]="comment().content" /></p>
 
     <div class="comment-actions">
       @if (canLike()) {
