@@ -33,6 +33,8 @@ export class Messages {
   private readonly realtime = inject(ChatRealtimeService);
   readonly directory = inject(UserDirectoryService);
   private readonly destroyRef = inject(DestroyRef);
+  private pollTimer: ReturnType<typeof setInterval> | null = null;
+  private polling = false;
 
   readonly currentUser = this.session.user;
   readonly loading = signal(true);
@@ -95,6 +97,9 @@ export class Messages {
       this.routeConversationId();
       void this.load();
     });
+
+    this.startPolling();
+    this.destroyRef.onDestroy(() => this.stopPolling());
   }
 
   activeConversation(): ConversationResponse | null {
@@ -282,6 +287,51 @@ export class Messages {
       await this.selectConversation(conversation.conversationId);
     } catch {
       this.toast.show('Conversation failed', 'Could not open a direct conversation.', 'warning');
+    }
+  }
+
+  private startPolling(): void {
+    if (this.pollTimer) {
+      return;
+    }
+
+    this.pollTimer = setInterval(() => {
+      void this.pollChat();
+    }, 1000);
+  }
+
+  private stopPolling(): void {
+    if (!this.pollTimer) {
+      return;
+    }
+
+    clearInterval(this.pollTimer);
+    this.pollTimer = null;
+  }
+
+  private async pollChat(): Promise<void> {
+    const currentUser = this.currentUser();
+    if (!currentUser || this.polling) {
+      return;
+    }
+
+    this.polling = true;
+    try {
+      const conversations = (await this.api.getConversations(currentUser.userId))
+        .filter((conversation) => conversation.participantOneId !== conversation.participantTwoId);
+      this.conversations.set(conversations);
+
+      const activeConversationId = this.activeConversationId();
+      if (!activeConversationId) {
+        return;
+      }
+
+      const messages = await this.api.getMessages(activeConversationId);
+      this.messages.set(messages);
+    } catch {
+      // Polling is best-effort. Existing send/load flows still show user-facing errors.
+    } finally {
+      this.polling = false;
     }
   }
 }
