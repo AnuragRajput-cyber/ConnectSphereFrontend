@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, computed, effect, inject, signal } from '@angular/core';
+import { Component, DestroyRef, ElementRef, ViewChild, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -24,6 +24,8 @@ import { buildAvatarDataUri } from '../../core/visuals';
   styleUrl: './messages.scss',
 })
 export class Messages {
+  @ViewChild('thread') private threadRef?: ElementRef<HTMLElement>;
+
   private readonly api = inject(ConnectSphereApiService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -69,6 +71,7 @@ export class Messages {
           this.messages.update((items) =>
             items.some((item) => item.messageId === message.messageId) ? items : [...items, message],
           );
+          this.scrollThreadToBottom();
         }
       });
 
@@ -128,6 +131,7 @@ export class Messages {
     try {
       const messages = await this.api.getMessages(conversationId);
       this.messages.set(messages);
+      this.scrollThreadToBottom();
       this.realtime.connect(conversationId);
       await this.router.navigate(['/messages', conversationId], {
         queryParams: { with: null },
@@ -217,6 +221,7 @@ export class Messages {
       this.messages.update((items) =>
         items.some((item) => item.messageId === saved.messageId) ? items : [...items, saved],
       );
+      this.scrollThreadToBottom();
     } catch {
       this.draft.set(content);
       this.toast.show('Message failed', 'Could not send this message.', 'warning');
@@ -327,11 +332,34 @@ export class Messages {
       }
 
       const messages = await this.api.getMessages(activeConversationId);
-      this.messages.set(messages);
+      if (this.hasMessageChanges(messages)) {
+        this.messages.set(messages);
+        this.scrollThreadToBottom();
+      }
     } catch {
       // Polling is best-effort. Existing send/load flows still show user-facing errors.
     } finally {
       this.polling = false;
     }
+  }
+
+  private hasMessageChanges(nextMessages: ChatMessageResponse[]): boolean {
+    const currentMessages = this.messages();
+    if (currentMessages.length !== nextMessages.length) {
+      return true;
+    }
+
+    return nextMessages.some((message, index) => currentMessages[index]?.messageId !== message.messageId);
+  }
+
+  private scrollThreadToBottom(): void {
+    queueMicrotask(() => {
+      const thread = this.threadRef?.nativeElement;
+      if (!thread) {
+        return;
+      }
+
+      thread.scrollTop = thread.scrollHeight;
+    });
   }
 }

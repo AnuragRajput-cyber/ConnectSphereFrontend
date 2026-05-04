@@ -77,7 +77,7 @@
               }
             </header>
 
-            <div class="messages-thread">
+            <div class="messages-thread" #thread>
               @for (message of messages(); track message.messageId) {
                 <div class="message-row" [class.sent]="message.senderId === currentUser()?.userId">
                   <article class="message-bubble">

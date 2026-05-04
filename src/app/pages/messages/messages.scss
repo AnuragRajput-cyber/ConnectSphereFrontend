@@ -1,13 +1,22 @@
 .messages-page {
   grid-template-columns: minmax(0, 1fr);
   max-width: 100%;
+  height: 100vh;
+  overflow: hidden;
+
+  .twitter-main {
+    height: 100vh;
+    overflow: hidden;
+  }
 }
 
 .messages-layout {
   display: grid;
   grid-template-columns: 360px minmax(0, 1fr);
-  min-height: 100vh;
+  height: 100vh;
+  min-height: 0;
   background: var(--surface);
+  overflow: hidden;
 }
 
 // ==================== LEFT PANE (MESSAGES LIST) ====================
@@ -18,6 +27,7 @@
   border-right: 1px solid var(--border-primary);
   background: #fff;
   overflow-y: auto;
+  min-height: 0;
 }
 
 .messages-header {
@@ -124,8 +134,10 @@
 .messages-chat-pane {
   display: grid;
   grid-template-rows: auto 1fr auto;
-  min-height: 100vh;
+  height: 100vh;
+  min-height: 0;
   background: #fff;
+  overflow: hidden;
 }
 
 .messages-chat-header {
@@ -256,6 +268,7 @@
   overflow-y: auto;
   flex: 1;
   min-height: 0;
+  overscroll-behavior: contain;
 }
 
 .thread-empty {
@@ -376,6 +389,10 @@
   padding: 18px 20px;
   border-top: 1px solid var(--border-primary);
   background: rgba(255, 255, 255, 0.94);
+  position: sticky;
+  bottom: 0;
+  z-index: 8;
+  flex-shrink: 0;
 }
 
 .composer-textarea {
@@ -482,8 +499,22 @@
 }
 
 @media (max-width: 768px) {
+  .messages-page {
+    height: calc(100vh - 60px);
+    padding-bottom: 0;
+
+    .twitter-main {
+      height: calc(100vh - 60px);
+    }
+  }
+
   .messages-layout {
-    min-height: calc(100vh - 64px);
+    height: calc(100vh - 60px);
+    min-height: 0;
+  }
+
+  .messages-chat-pane {
+    height: calc(100vh - 60px);
   }
 
   .messages-header,
@@ -513,5 +544,6 @@
   .message-composer {
     gap: var(--space-2);
     padding: var(--space-3);
+    padding-bottom: calc(var(--space-3) + env(safe-area-inset-bottom));
   }
 }
