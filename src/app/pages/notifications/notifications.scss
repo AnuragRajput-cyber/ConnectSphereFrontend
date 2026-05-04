@@ -1,6 +1,6 @@
 .notifications-page {
   grid-template-columns: minmax(0, 1fr);
-  width: min(100%, var(--feed-width));
+  width: 100%;
   max-width: none;
 }
 

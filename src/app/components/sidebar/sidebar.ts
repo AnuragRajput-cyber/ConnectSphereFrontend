@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { NavItem, UserProfile } from '../../core/social.models';
 import { AvatarComponent } from '../avatar/avatar';
@@ -19,6 +19,7 @@ export class SidebarComponent {
   readonly isAuthenticated = input(false);
   readonly authRequested = output<void>();
   readonly logoutRequested = output<void>();
+  readonly collapsed = signal(false);
 
   readonly navItems: NavItem[] = [
     { route: '/feed', label: 'Home', icon: 'home' },
@@ -31,5 +32,9 @@ export class SidebarComponent {
   isAdmin(): boolean {
     const role = this.currentUser()?.role?.toUpperCase();
     return role === 'ADMIN' || role === 'ROLE_ADMIN';
+  }
+
+  toggleCollapsed(): void {
+    this.collapsed.update((value) => !value);
   }
 }

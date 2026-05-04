@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, input, output } from '@angular/core';
+import { Component, computed, input, output, signal } from '@angular/core';
 import { HashtagResponse, UserProfile, UserSummary } from '../../core/social.models';
 import { UserCardComponent } from '../user-card/user-card';
 
@@ -19,9 +19,14 @@ export class RightSidebarComponent {
   readonly followClicked = output<string>();
   readonly profileClicked = output<string>();
   readonly authRequested = output<void>();
+  readonly showAllSuggestions = signal(false);
   readonly visibleDiscoverUsers = computed(() =>
     this.discoverUsers().filter((user) => user.userId !== this.currentUser()?.userId),
   );
+  readonly suggestionsPreview = computed(() =>
+    this.showAllSuggestions() ? this.visibleDiscoverUsers() : this.visibleDiscoverUsers().slice(0, 3),
+  );
+  readonly hasMoreSuggestions = computed(() => this.visibleDiscoverUsers().length > 3);
 
   follow(userId: string): void {
     if (!this.currentUser()) {
@@ -40,5 +45,9 @@ export class RightSidebarComponent {
 
   isPending(userId: string): boolean {
     return !!this.pendingIds()[userId];
+  }
+
+  toggleSuggestions(): void {
+    this.showAllSuggestions.update((value) => !value);
   }
 }

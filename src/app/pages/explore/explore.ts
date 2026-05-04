@@ -7,7 +7,7 @@ import { PostCardComponent } from '../../components/post-card/post-card';
 import { UiIconComponent } from '../../components/ui-icon/ui-icon';
 import { UserCardComponent } from '../../components/user-card/user-card';
 import { ConnectSphereApiService } from '../../core/connectsphere-api.service';
-import { ExploreResults, FeedCardView, PostResponse, UserSummary } from '../../core/social.models';
+import { ExploreResults, FeedCardView, FollowResponse, PostResponse, UserSummary } from '../../core/social.models';
 import { SessionService } from '../../core/session.service';
 import { ToastService } from '../../core/toast.service';
 import { UiShellService } from '../../core/ui-shell.service';
@@ -226,11 +226,11 @@ export class Explore {
       });
 
       if (currentUser) {
-        const [following, outgoingPending, suggestedUsers] = await Promise.all([
+        const [following, outgoingPending] = await Promise.all([
           this.api.getFollowing(currentUser.userId).catch(() => []),
           this.api.getOutgoingPendingRequests(currentUser.userId).catch(() => []),
-          this.loadSuggestedUsers(currentUser.userId),
         ]);
+        const suggestedUsers = await this.loadSuggestedUsers(currentUser.userId, following);
         this.followingIds.set(
           following.reduce<Record<string, true>>((state, item) => {
             state[item.followeeId] = true;
@@ -256,23 +256,7 @@ export class Explore {
     }
   }
 
-  private async loadSuggestedUsers(userId: string): Promise<UserSummary[]> {
-    const suggestedIds = await this.api.getSuggestedUsers(userId).catch(() => []);
-    if (!suggestedIds.length) {
-      return [];
-    }
-
-    const profiles = await Promise.all(
-      suggestedIds.slice(0, 5).map((id) => this.api.getPublicUserProfile(id).catch(() => null)),
-    );
-    return profiles
-      .filter((profile): profile is NonNullable<typeof profile> => !!profile)
-      .map((profile) => ({
-        userId: profile.userId,
-        username: profile.username,
-        fullName: profile.fullName,
-        profilePicUrl: profile.profilePicUrl,
-        role: profile.role,
-      }));
+  private async loadSuggestedUsers(userId: string, following: FollowResponse[] = []): Promise<UserSummary[]> {
+    return this.api.getFriendOfFriendSuggestions(userId, following);
   }
 }

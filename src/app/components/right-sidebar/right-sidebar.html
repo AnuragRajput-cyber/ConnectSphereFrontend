@@ -25,7 +25,7 @@
       <h3>Who to follow</h3>
     </div>
     <div class="follow-list">
-      @for (user of visibleDiscoverUsers(); track user.userId) {
+      @for (user of suggestionsPreview(); track user.userId) {
         <app-user-card
           [user]="user"
           [compact]="true"
@@ -36,6 +36,11 @@
           (followRequested)="follow($event)"
           (profileRequested)="profileClicked.emit($event)"
         />
+      }
+      @if (hasMoreSuggestions()) {
+        <button class="see-more-btn" type="button" (click)="toggleSuggestions()">
+          {{ showAllSuggestions() ? 'Show less' : 'See more' }}
+        </button>
       }
       @if (!visibleDiscoverUsers().length) {
         <div class="widget-empty">

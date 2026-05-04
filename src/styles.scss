@@ -62,7 +62,7 @@
   --max-shell: 1408px;
   --sidebar-width: 260px;
   --sidebar-width-collapsed: 88px;
-  --feed-width: clamp(640px, calc(100vw - var(--sidebar-width) - var(--right-sidebar-width) - 72px), 740px);
+  --feed-width: clamp(680px, calc(100vw - var(--sidebar-width) - var(--right-sidebar-width) - 24px), 760px);
   --right-sidebar-width: 340px;
 
   // TYPOGRAPHY
@@ -577,7 +577,7 @@ video {
 @media (min-width: 1280px) and (max-width: 1439px) {
   :root {
     --right-sidebar-width: 320px;
-    --feed-width: clamp(640px, calc(100vw - var(--sidebar-width) - var(--right-sidebar-width) - 48px), 700px);
+    --feed-width: clamp(640px, calc(100vw - var(--sidebar-width) - var(--right-sidebar-width) - 16px), 700px);
   }
 
   .twitter-page {
@@ -620,6 +620,16 @@ video {
     min-height: 48px;
   }
 
+  .twitter-page {
+    padding: 0 10px 76px;
+  }
+
+  .twitter-main {
+    border: 1px solid var(--border-primary);
+    border-radius: 18px;
+    overflow: hidden;
+  }
+
   .twitter-card {
     padding: var(--space-3);
   }
@@ -633,7 +643,7 @@ video {
   }
 
   .twitter-main-header {
-    padding: 0 var(--space-2);
+    padding: 0 var(--space-3);
   }
 
   .twitter-card {
@@ -655,10 +665,5 @@ video {
   .twitter-page {
     gap: 0;
     max-width: none;
-  }
-
-  .twitter-main {
-    border-right: 0;
-    border-left: 0;
   }
 }

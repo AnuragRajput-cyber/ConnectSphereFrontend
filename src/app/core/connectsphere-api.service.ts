@@ -362,6 +362,53 @@ export class ConnectSphereApiService {
     return firstValueFrom(this.http.get<string[]>(`/api/v1/follows/suggested/${userId}`));
   }
 
+  async getFriendOfFriendSuggestions(
+    userId: string,
+    following: FollowResponse[] = [],
+    limit = 8,
+  ): Promise<UserSummary[]> {
+    const activeFollowing = following.length ? following : await this.getFollowing(userId).catch(() => []);
+    const followingIds = new Set(activeFollowing.map((item) => item.followeeId));
+    const suggestedIds = await this.getSuggestedUsers(userId).catch(() => []);
+    const secondDegreeIds = suggestedIds.length
+      ? suggestedIds
+      : Array.from(
+          new Set(
+            (
+              await Promise.all(
+                Array.from(followingIds)
+                  .slice(0, 10)
+                  .map((followeeId) => this.getFollowing(followeeId).catch(() => [])),
+              )
+            )
+              .flat()
+              .map((item) => item.followeeId),
+          ),
+        );
+
+    const filteredIds = secondDegreeIds
+      .filter((candidateId) => candidateId !== userId && !followingIds.has(candidateId))
+      .slice(0, limit);
+
+    if (!filteredIds.length) {
+      return [];
+    }
+
+    const profiles = await Promise.all(
+      filteredIds.map((candidateId) => this.getPublicUserProfile(candidateId).catch(() => null)),
+    );
+
+    return profiles
+      .filter((profile): profile is NonNullable<typeof profile> => !!profile)
+      .map((profile) => ({
+        userId: profile.userId,
+        username: profile.username,
+        fullName: profile.fullName,
+        profilePicUrl: profile.profilePicUrl,
+        role: profile.role,
+      }));
+  }
+
   followUser(
     followerId: string,
     followeeId: string,

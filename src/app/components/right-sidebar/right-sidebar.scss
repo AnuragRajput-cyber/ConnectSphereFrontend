@@ -95,6 +95,19 @@
   }
 }
 
+.see-more-btn {
+  min-height: 42px;
+  padding: 0 var(--space-5);
+  border-top: 1px solid var(--border-primary);
+  color: var(--accent);
+  font-weight: var(--font-weight-bold);
+  text-align: left;
+
+  &:hover {
+    background: #f8fafc;
+  }
+}
+
 // ==================== RESPONSIVE ====================
 
 @media (max-width: 1279px) {

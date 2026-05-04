@@ -1,4 +1,6 @@
 .profile-header {
+  position: relative;
+  z-index: 2;
   margin-top: -64px;
   padding: 0 24px 20px;
   border: 0;
@@ -6,6 +8,7 @@
   border-radius: 0;
   box-shadow: none;
   background: transparent;
+  overflow: visible;
 }
 
 .profile-body {
@@ -155,13 +158,13 @@
 
 @media (max-width: 760px) {
   .profile-header {
-    margin-top: -48px;
-    padding: 0 16px 18px;
+    margin-top: -42px;
+    padding: 0 14px 18px;
   }
 
   .profile-body {
-    grid-template-columns: 96px minmax(0, 1fr);
-    gap: 1rem;
+    grid-template-columns: 116px minmax(0, 1fr);
+    gap: 0.9rem;
   }
 
   .stats {
@@ -171,12 +174,13 @@
   }
 
   .story-ring {
-    width: 104px;
-    height: 104px;
+    width: 116px;
+    height: 116px;
   }
 
   .profile-copy {
-    padding-top: 56px;
+    padding-top: 58px;
+    gap: 0.75rem;
   }
 
   .actions {

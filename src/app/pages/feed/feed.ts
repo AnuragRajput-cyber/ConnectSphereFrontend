@@ -727,7 +727,7 @@ export class Feed {
       const [stories, trending, discoverUsers] = await Promise.all([
         user ? this.api.getActiveStories(storyAuthorIds).catch(() => []) : Promise.resolve([]),
         this.api.getTrendingHashtags().catch(() => []),
-        this.loadDiscoverUsers(),
+        this.loadDiscoverUsers(following),
       ]);
 
       this.directory.storeSummaries(discoverUsers);
@@ -788,24 +788,10 @@ export class Feed {
     return posts.filter((item): item is PostResponse => !!item && !item.deleted);
   }
 
-  private async loadDiscoverUsers(): Promise<UserSummary[]> {
+  private async loadDiscoverUsers(following: FollowResponse[] = []): Promise<UserSummary[]> {
     const currentUser = this.currentUser();
     if (currentUser) {
-      const suggestedIds = await this.api.getSuggestedUsers(currentUser.userId).catch(() => []);
-      if (suggestedIds.length) {
-        const profiles = await Promise.all(
-          suggestedIds.slice(0, 5).map((userId) => this.api.getPublicUserProfile(userId).catch(() => null)),
-        );
-        return profiles
-          .filter((profile): profile is NonNullable<typeof profile> => !!profile)
-          .map((profile) => ({
-            userId: profile.userId,
-            username: profile.username,
-            fullName: profile.fullName,
-            profilePicUrl: profile.profilePicUrl,
-            role: profile.role,
-          }));
-      }
+      return this.api.getFriendOfFriendSuggestions(currentUser.userId, following);
     }
 
     return [];
