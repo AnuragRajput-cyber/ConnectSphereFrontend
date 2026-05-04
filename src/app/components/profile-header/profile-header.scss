@@ -22,7 +22,7 @@
 .avatar-column {
   position: relative;
   z-index: 6;
-  margin-top: -64px;
+  margin-top: -52px;
   pointer-events: auto;
 }
 
@@ -176,8 +176,8 @@
   }
 
   .profile-body {
-    grid-template-columns: 96px minmax(0, 1fr);
-    gap: 12px;
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
 
   .stats {
@@ -202,7 +202,7 @@
   }
 
   .avatar-column {
-    margin-top: -50px;
+    margin-top: -42px;
   }
 
   .story-ring {
@@ -216,8 +216,8 @@
   }
 
   .profile-copy {
-    padding-top: 10px;
-    gap: 0.7rem;
+    padding-top: 0;
+    gap: 0.85rem;
     min-width: 0;
   }
 
