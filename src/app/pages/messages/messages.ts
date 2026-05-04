@@ -101,6 +101,12 @@ export class Messages {
       void this.load();
     });
 
+    effect(() => {
+      this.activeConversationId();
+      this.messages().length;
+      this.scrollThreadToBottom();
+    });
+
     this.startPolling();
     this.destroyRef.onDestroy(() => this.stopPolling());
   }
@@ -353,13 +359,18 @@ export class Messages {
   }
 
   private scrollThreadToBottom(): void {
-    queueMicrotask(() => {
+    window.setTimeout(() => {
       const thread = this.threadRef?.nativeElement;
       if (!thread) {
         return;
       }
 
-      thread.scrollTop = thread.scrollHeight;
-    });
+      window.requestAnimationFrame(() => {
+        thread.scrollTo({
+          top: thread.scrollHeight,
+          behavior: 'auto',
+        });
+      });
+    }, 0);
   }
 }
