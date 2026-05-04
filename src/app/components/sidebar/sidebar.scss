@@ -7,11 +7,13 @@
   top: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-5);
   height: 100vh;
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-5) var(--space-3);
   width: var(--sidebar-width);
-  border-right: 1px solid var(--border-primary);
+  border-right: 1px solid rgba(229, 231, 235, 0.9);
+  background: rgba(255, 255, 255, 0.58);
+  backdrop-filter: blur(18px);
   overflow-y: auto;
 }
 
@@ -23,10 +25,13 @@
   height: 52px;
   border-radius: 50%;
   color: var(--accent);
-  transition: background-color var(--transition-base);
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 12px 30px rgba(29, 155, 240, 0.1);
+  transition: background-color var(--transition-base), transform var(--transition-base);
 
   &:hover {
     background: rgba(29, 155, 240, 0.1);
+    transform: translateY(-1px);
   }
 
   app-ui-icon {
@@ -45,19 +50,24 @@
   display: flex;
   align-items: center;
   gap: var(--space-4);
-  width: fit-content;
+  width: 100%;
   height: 48px;
-  padding: 0 var(--space-4);
+  padding: 0 18px;
   border-radius: 999px;
   color: var(--text-primary);
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  transition: background-color var(--transition-base);
+  font-size: 18px;
+  font-weight: 650;
+  transition: background-color var(--transition-base), color var(--transition-base), transform var(--transition-base);
   text-decoration: none;
 
-  &:hover,
+  &:hover {
+    background: #f1f5f9;
+    transform: translateX(2px);
+  }
+
   &.active {
-    background: var(--surface-hover);
+    background: #e8f3ff;
+    color: var(--accent);
   }
 
   .nav-icon {
@@ -72,8 +82,8 @@
 }
 
 .nav-label {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
+  font-size: 18px;
+  font-weight: 650;
 }
 
 .nav-icon {
@@ -128,11 +138,14 @@
 
 .tweet-btn,
 .auth-btn {
-  background: var(--accent);
+  background: var(--brand-gradient);
   color: white;
+  box-shadow: 0 8px 20px rgba(29, 155, 240, 0.25);
 
   &:hover {
-    background: var(--accent-hover);
+    background: var(--brand-gradient);
+    transform: translateY(-1px);
+    box-shadow: 0 14px 30px rgba(29, 155, 240, 0.32);
   }
 
   &:active {
@@ -146,7 +159,8 @@
   color: var(--text-primary);
 
   &:hover {
-    background: var(--surface-hover);
+    background: #f8fafc;
+    border-color: #cbd5e1;
   }
 }
 
@@ -162,13 +176,13 @@
   grid-template-columns: 40px minmax(0, 1fr) auto;
   gap: var(--space-3);
   align-items: center;
-  padding: var(--space-2) var(--space-3);
-  border-radius: 999px;
+  padding: var(--space-3);
+  border-radius: 22px;
   transition: background-color var(--transition-base);
   text-decoration: none;
 
   &:hover {
-    background: var(--surface-hover);
+    background: #f8fafc;
   }
 }
 
@@ -202,7 +216,7 @@
 
 // ==================== RESPONSIVE ====================
 
-@media (max-width: 1200px) {
+@media (max-width: 1200px) and (min-width: 1025px) {
   .sidebar {
     width: var(--sidebar-width-collapsed);
     padding: var(--space-3) var(--space-2);
@@ -239,10 +253,13 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .sidebar {
     display: none;
   }
+}
+
+@media (max-width: 768px) {
 
   .mobile-nav {
     position: fixed;
@@ -254,11 +271,12 @@
     grid-template-columns: repeat(5, 1fr);
     align-items: center;
     justify-items: center;
-    height: 56px;
+    height: 64px;
     padding: 0 0 max(env(safe-area-inset-bottom), 0);
-    border-top: 1px solid var(--border-primary);
-    background: rgba(255, 255, 255, 0.96);
-    backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(229, 231, 235, 0.9);
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(18px);
+    box-shadow: 0 -10px 30px rgba(15, 23, 42, 0.08);
 
     &.authenticated {
       grid-template-columns: repeat(6, 1fr);
@@ -278,6 +296,7 @@
 
     &.active {
       color: var(--accent);
+      background: #e8f3ff;
     }
 
     &:hover {

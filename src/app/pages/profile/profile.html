@@ -161,7 +161,10 @@
           <p>{{ followRequested() ? 'Your follow request is pending approval.' : 'Follow this user to see their posts and media.' }}</p>
         </div>
       } @else if ((tab() === 'media' ? mediaPosts().length : posts().length) === 0) {
-        <div class="twitter-empty">Nothing to show in this section yet.</div>
+        <div class="twitter-empty">
+          <h3>No posts yet</h3>
+          <p>When this user posts, they will show up here.</p>
+        </div>
       } @else {
         <div class="twitter-list">
           @for (post of (tab() === 'media' ? mediaPosts() : posts()); track post.postId) {

@@ -34,3 +34,26 @@ AggregateError [ECONNREFUSED]:
 AggregateError [ECONNREFUSED]: 
     at internalConnectMultiple (node:net:1142:49)
     at afterConnectMultiple (node:net:1723:7)[39m[22m
+[1m[33m[33m▲ [43;33m[[43;30mWARNING[43;33m][0m [1mNG8113: PostCardComponent is not used within the template of Explore[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pages/explore/explore.ts:20:98:
+[37m      20 │ ...onent, RightSidebarComponent, UiIconComponent, [32mPostCardComponent[37m],
+         ╵                                                   [32m~~~~~~~~~~~~~~~~~[0m
+
+[39m[22m
+[1m[31m[2m4:29:24 PM[22m[1m [31m[1m[vite][22m[1m[31m [31mhttp proxy error: /api/v1/hashtags/trending[31m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1142:49)
+    at afterConnectMultiple (node:net:1723:7)[39m[22m
+[1m[31m[2m4:29:24 PM[22m[1m [31m[1m[vite][22m[1m[31m [31mhttp proxy error: /api/v1/posts/feed[31m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1142:49)
+    at afterConnectMultiple (node:net:1723:7)[39m[22m
+[1m[31m[2m4:36:44 PM[22m[1m [31m[1m[vite][22m[1m[31m [31mhttp proxy error: /api/v1/hashtags/trending[31m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1142:49)
+    at afterConnectMultiple (node:net:1723:7)[39m[22m
+[1m[31m[2m4:36:44 PM[22m[1m [31m[1m[vite][22m[1m[31m [31mhttp proxy error: /api/v1/posts/feed[31m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1142:49)
+    at afterConnectMultiple (node:net:1723:7)[39m[22m

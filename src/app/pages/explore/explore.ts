@@ -3,10 +3,11 @@ import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RightSidebarComponent } from '../../components/right-sidebar/right-sidebar';
+import { PostCardComponent } from '../../components/post-card/post-card';
 import { UiIconComponent } from '../../components/ui-icon/ui-icon';
 import { UserCardComponent } from '../../components/user-card/user-card';
 import { ConnectSphereApiService } from '../../core/connectsphere-api.service';
-import { ExploreResults, PostResponse, UserSummary } from '../../core/social.models';
+import { ExploreResults, FeedCardView, PostResponse, UserSummary } from '../../core/social.models';
 import { SessionService } from '../../core/session.service';
 import { ToastService } from '../../core/toast.service';
 import { UiShellService } from '../../core/ui-shell.service';
@@ -16,7 +17,7 @@ import { UserDirectoryService } from '../../core/user-directory.service';
 @Component({
   selector: 'app-explore',
   standalone: true,
-  imports: [CommonModule, FormsModule, UserCardComponent, RightSidebarComponent, UiIconComponent],
+  imports: [CommonModule, FormsModule, UserCardComponent, RightSidebarComponent, UiIconComponent, PostCardComponent],
   templateUrl: './explore.html',
   styleUrl: './explore.scss',
 })
@@ -50,6 +51,15 @@ export class Explore {
         return rightScore - leftScore;
       })
       .slice(0, 9),
+  );
+  readonly topPostViews = computed<FeedCardView[]>(() =>
+    this.topPosts().map((post) => ({
+      post,
+      author: this.directory.get(post.authorId) ?? null,
+      comments: [],
+      commentsLoaded: false,
+      likePulse: false,
+    })),
   );
 
   constructor() {

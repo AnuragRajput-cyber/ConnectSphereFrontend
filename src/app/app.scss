@@ -7,11 +7,11 @@
 .shell {
   display: grid;
   grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
-  gap: var(--space-4);
+  gap: var(--space-6);
   min-height: 100vh;
   max-width: var(--max-shell);
   margin: 0 auto;
-  padding: 0 var(--space-4);
+  padding: 0 var(--space-6);
 }
 
 .shell.auth-shell {
@@ -43,6 +43,14 @@
 @media (max-width: 1200px) {
   .shell {
     grid-template-columns: var(--sidebar-width-collapsed) minmax(0, 1fr);
+    padding: 0 var(--space-4);
+  }
+}
+
+@media (max-width: 1024px) {
+  .shell {
+    grid-template-columns: 1fr;
+    padding: 0;
   }
 }
 
@@ -52,10 +60,9 @@
     grid-template-rows: 1fr auto;
     gap: 0;
     max-width: none;
-    padding: 0;
   }
 
   .content-shell {
-    padding-bottom: 56px;
+    padding-bottom: 64px;
   }
 }

@@ -4,7 +4,8 @@
   gap: 0.8rem;
   align-items: center;
   width: 100%;
-  padding: 0.95rem 1rem;
+  min-height: 72px;
+  padding: 0.85rem 1.25rem;
   border: 0;
   border-bottom: 1px solid var(--border);
   background: transparent;
@@ -14,10 +15,20 @@
 
 .chat-item.active,
 .chat-item:hover {
-  background: var(--surface-soft);
+  background: #eff6ff;
+}
+
+.chat-item:hover:not(.active) {
+  background: #f8fafc;
 }
 
 .chat-item p {
   margin-top: 0.18rem;
   color: var(--muted);
+  font-size: 14px;
+}
+
+.chat-item strong {
+  font-size: 16px;
+  color: var(--text-primary);
 }

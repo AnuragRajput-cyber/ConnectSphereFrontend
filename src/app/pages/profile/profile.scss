@@ -23,9 +23,9 @@
   position: relative;
   height: 220px;
   overflow: hidden;
-  background: linear-gradient(135deg, #dbeafe, #93c5fd 48%, #60a5fa);
+  background: var(--brand-gradient);
   z-index: 1;
-  margin-bottom: 60px;
+  margin-bottom: 0;
   border-bottom: 1px solid var(--border-primary);
 }
 
@@ -42,7 +42,7 @@
   padding: 1.5rem;
   background:
     radial-gradient(circle at top right, rgba(255, 255, 255, 0.35), transparent 36%),
-    linear-gradient(135deg, rgba(29, 155, 240, 0.9), rgba(88, 171, 255, 0.88));
+    linear-gradient(135deg, rgba(29, 155, 240, 0.92), rgba(124, 58, 237, 0.9));
   color: #fff;
 
   span {
@@ -80,6 +80,7 @@
 }
 
 .tab-panel {
+  border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
 }
 
@@ -89,7 +90,7 @@
 }
 
 .tabs button {
-  min-height: 52px;
+  min-height: 56px;
   border: 0;
   background: transparent;
   color: var(--muted);
@@ -100,6 +101,11 @@
 .tabs button.active {
   color: var(--accent);
   box-shadow: inset 0 -3px 0 var(--accent);
+}
+
+.tabs button:hover {
+  background: #f8fafc;
+  color: var(--accent);
 }
 
 .about-panel {
@@ -299,7 +305,7 @@
   display: grid;
   gap: 0.75rem;
   width: 100%;
-  padding: 1rem;
+  padding: 18px 22px;
   border: 0;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
@@ -309,6 +315,11 @@
 
 .profile-post-card:hover {
   background: var(--surface-soft);
+}
+
+.twitter-empty h3 {
+  font-size: 20px;
+  margin-bottom: 6px;
 }
 
 .post-topline {

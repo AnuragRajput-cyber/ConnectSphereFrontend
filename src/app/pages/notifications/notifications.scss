@@ -1,6 +1,6 @@
 .notifications-page {
   grid-template-columns: minmax(0, 1fr);
-  max-width: 680px;
+  max-width: 720px;
 }
 
 .request-panel {
@@ -99,7 +99,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.85rem 1rem;
+  padding: 0.85rem 1.25rem;
   border-bottom: 1px solid var(--border);
 }
 
@@ -115,7 +115,7 @@
 }
 
 .notification-tabs button.active {
-  background: var(--surface-soft);
+  background: #e8f3ff;
   color: var(--ink);
 }
 
@@ -124,6 +124,6 @@
 }
 
 .notification-group h2 {
-  padding: 1rem 1rem 0;
+  padding: 1rem 1.25rem 0;
   font-size: 1rem;
 }
