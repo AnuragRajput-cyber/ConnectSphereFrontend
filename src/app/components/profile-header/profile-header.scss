@@ -99,6 +99,24 @@
   min-width: 72px;
 }
 
+.stat-btn {
+  display: grid;
+  gap: 0.12rem;
+  min-width: 72px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.stat-btn:hover span,
+.stat-btn:focus-visible span {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
 .stats strong {
   display: block;
   font-size: 1.15rem;

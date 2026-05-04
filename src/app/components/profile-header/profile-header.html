@@ -29,12 +29,16 @@
           <span>Posts</span>
         </article>
         <article>
-          <strong>{{ counts().followers }}</strong>
-          <span>Followers</span>
+          <button type="button" class="stat-btn" (click)="followersRequested.emit()">
+            <strong>{{ counts().followers }}</strong>
+            <span>Followers</span>
+          </button>
         </article>
         <article>
-          <strong>{{ counts().following }}</strong>
-          <span>Following</span>
+          <button type="button" class="stat-btn" (click)="followingRequested.emit()">
+            <strong>{{ counts().following }}</strong>
+            <span>Following</span>
+          </button>
         </article>
       </div>
 

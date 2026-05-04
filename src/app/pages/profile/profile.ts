@@ -6,8 +6,9 @@ import { EmptyStateComponent } from '../../components/empty-state/empty-state';
 import { ProfileHeaderComponent } from '../../components/profile-header/profile-header';
 import { RightSidebarComponent } from '../../components/right-sidebar/right-sidebar';
 import { UiIconComponent } from '../../components/ui-icon/ui-icon';
+import { UserCardComponent } from '../../components/user-card/user-card';
 import { ConnectSphereApiService } from '../../core/connectsphere-api.service';
-import { HashtagResponse, PostResponse, PublicUserProfile, UserProfile, UserSummary } from '../../core/social.models';
+import { FollowResponse, HashtagResponse, PostResponse, PublicUserProfile, UserProfile, UserSummary } from '../../core/social.models';
 import { SessionService } from '../../core/session.service';
 import { ToastService } from '../../core/toast.service';
 import { buildAvatarDataUri } from '../../core/visuals';
@@ -16,7 +17,7 @@ import { UserDirectoryService } from '../../core/user-directory.service';
 @Component({
   selector: 'app-profile',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, ProfileHeaderComponent, RightSidebarComponent, EmptyStateComponent, UiIconComponent],
+  imports: [CommonModule, FormsModule, RouterLink, ProfileHeaderComponent, RightSidebarComponent, EmptyStateComponent, UiIconComponent, UserCardComponent],
   templateUrl: './profile.html',
   styleUrl: './profile.scss',
 })
@@ -58,6 +59,16 @@ export class Profile {
   readonly discoverFollowingIds = signal<Record<string, true>>({});
   readonly discoverPendingIds = signal<Record<string, true>>({});
   readonly trending = signal<HashtagResponse[]>([]);
+  readonly followListMode = signal<'followers' | 'following' | null>(null);
+  readonly followListUsers = signal<PublicUserProfile[]>([]);
+  readonly followListLoading = signal(false);
+  readonly followListTitle = computed(() => {
+    const mode = this.followListMode();
+    if (!mode) {
+      return '';
+    }
+    return mode === 'followers' ? 'Followers' : 'Following';
+  });
   readonly isOwnProfile = computed(() => {
     const routeUserId = this.viewedUserId();
     const currentUserId = this.currentUser()?.userId;
@@ -203,7 +214,67 @@ export class Profile {
   }
 
   openProfile(userId: string): void {
+    this.closeFollowList();
     void this.router.navigate(['/profile', userId]);
+  }
+
+  async openFollowList(mode: 'followers' | 'following'): Promise<void> {
+    const user = this.displayUser();
+    if (!user) {
+      return;
+    }
+
+    if (this.contentLocked()) {
+      this.toast.show('Private account', 'Follow this user to view their network.', 'neutral');
+      return;
+    }
+
+    this.followListMode.set(mode);
+    this.followListUsers.set([]);
+    this.followListLoading.set(true);
+
+    try {
+      const relationships = mode === 'followers'
+        ? await this.api.getFollowers(user.userId)
+        : await this.api.getFollowing(user.userId);
+      const userIds = this.followListUserIds(mode, relationships);
+      const profiles = await Promise.all(
+        userIds.map((userId) => this.api.getPublicUserProfile(userId).catch(() => null)),
+      );
+      const users = profiles.filter((profile): profile is PublicUserProfile => !!profile && profile.active);
+      users.forEach((profile) => this.directory.storePublicProfile(profile));
+      this.followListUsers.set(users);
+    } catch {
+      this.toast.show('Network unavailable', `Could not load ${mode}.`, 'warning');
+    } finally {
+      this.followListLoading.set(false);
+    }
+  }
+
+  closeFollowList(): void {
+    this.followListMode.set(null);
+    this.followListUsers.set([]);
+    this.followListLoading.set(false);
+  }
+
+  async followFromList(userId: string): Promise<void> {
+    await this.followSuggested(userId);
+    const mode = this.followListMode();
+    if (mode) {
+      await this.openFollowList(mode);
+    }
+  }
+
+  async messageUser(userId: string): Promise<void> {
+    const currentUser = this.currentUser();
+    if (!currentUser || currentUser.userId === userId) {
+      return;
+    }
+
+    this.closeFollowList();
+    await this.router.navigate(['/messages'], {
+      queryParams: { with: userId },
+    });
   }
 
   async toggleFollow(): Promise<void> {
@@ -489,5 +560,10 @@ export class Profile {
     }
 
     return this.api.searchUsersViaSearch('').catch(() => []);
+  }
+
+  private followListUserIds(mode: 'followers' | 'following', relationships: FollowResponse[]): string[] {
+    const ids = relationships.map((relationship) => mode === 'followers' ? relationship.followerId : relationship.followeeId);
+    return Array.from(new Set(ids));
   }
 }
