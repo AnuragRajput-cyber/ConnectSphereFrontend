@@ -8,6 +8,7 @@
   gap: 1rem;
   max-width: 1100px;
   margin: 0 auto;
+  padding: 16px;
 }
 
 .composer-card,
@@ -15,6 +16,11 @@
 .actions {
   display: grid;
   gap: 0.85rem;
+}
+
+.composer-card,
+.preview-card {
+  padding: 18px;
 }
 
 .author-row,
@@ -51,12 +57,19 @@
 select,
 textarea {
   width: 100%;
-  min-height: 52px;
   padding: 0.9rem 1rem;
   border: 1px solid var(--border);
   border-radius: 16px;
   background: #fff;
   font: inherit;
+}
+
+select {
+  min-height: 52px;
+}
+
+textarea {
+  min-height: 180px;
 }
 
 .upload-control {
@@ -154,7 +167,8 @@ textarea {
 
 .preview-media,
 .preview-empty {
-  min-height: 280px;
+  min-height: 240px;
+  max-height: 520px;
   border-radius: 24px;
   overflow: hidden;
   background: #f7f7f9;
@@ -164,6 +178,7 @@ textarea {
 .preview-media video {
   width: 100%;
   height: 100%;
+  max-height: 520px;
   object-fit: cover;
 }
 
@@ -183,18 +198,46 @@ textarea {
   .create-shell {
     grid-template-columns: 1fr;
     max-width: none;
-    padding: 0 12px 76px;
+    padding: 16px 16px 80px;
   }
 }
 
 @media (max-width: 640px) {
   .create-shell {
-    padding: 0 10px 76px;
+    padding: 16px 16px 80px;
   }
 
   .composer-card,
   .preview-card {
-    border-radius: 18px;
+    border-radius: 22px;
+    padding: 16px;
+  }
+
+  .author-row app-avatar {
+    --avatar-override-size: 52px;
+  }
+
+  .author-row strong {
+    font-size: 16px;
+  }
+
+  .author-row p {
+    font-size: 14px;
+  }
+
+  .field span,
+  .upload-field span {
+    font-size: 16px;
+  }
+
+  textarea {
+    min-height: 180px;
+    font-size: 16px;
+  }
+
+  select,
+  textarea {
+    border-radius: 20px;
   }
 
   .two-col,
@@ -205,9 +248,16 @@ textarea {
   .upload-control {
     display: grid;
     justify-items: start;
+    padding: 14px;
+    border-radius: 20px;
   }
 
   .upload-copy {
     white-space: normal;
+  }
+
+  .ghost-btn,
+  .primary-btn {
+    min-height: 48px;
   }
 }

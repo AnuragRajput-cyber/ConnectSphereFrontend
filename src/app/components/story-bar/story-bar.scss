@@ -114,3 +114,33 @@
   font-weight: var(--font-weight-bold);
   line-height: 1;
 }
+
+@media (max-width: 768px) {
+  .stories {
+    padding: 12px;
+  }
+
+  .story-track {
+    gap: 12px;
+  }
+
+  .story-item {
+    min-width: 72px;
+  }
+
+  .ring {
+    width: 64px;
+    height: 64px;
+    flex-basis: 64px;
+  }
+
+  .ring img {
+    width: 58px;
+    height: 58px;
+  }
+
+  .story-label {
+    max-width: 70px;
+    font-size: 13px;
+  }
+}

@@ -437,6 +437,12 @@ export class Profile {
     }
   }
 
+  async logout(): Promise<void> {
+    await this.session.logout();
+    this.toast.show('Signed out', 'Your session has been cleared.', 'neutral');
+    await this.router.navigateByUrl('/feed');
+  }
+
   private async load(): Promise<void> {
     const currentUser = this.currentUser();
     const routeUserId = this.viewedUserId();

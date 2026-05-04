@@ -1,8 +1,8 @@
 .composer {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
-  padding: 18px 22px;
+  gap: 14px;
+  padding: 14px 16px;
   border-bottom: 1px solid var(--border-primary);
   background: rgba(255, 255, 255, 0.96);
 }
@@ -21,7 +21,7 @@
 }
 
 .composer textarea {
-  min-height: 96px;
+  min-height: 84px;
   padding: 0;
   border: 0;
   border-radius: 0;
@@ -159,20 +159,37 @@
 
 @media (max-width: 768px) {
   .composer {
-    padding: var(--space-3);
+    padding: 12px;
+  }
+
+  .composer-row app-avatar {
+    --avatar-override-size: 44px;
   }
 
   .composer-row {
-    grid-template-columns: 40px minmax(0, 1fr);
+    grid-template-columns: 44px minmax(0, 1fr);
     gap: var(--space-3);
   }
 
   .composer textarea {
-    font-size: var(--font-size-lg);
+    min-height: 78px;
+    font-size: 16px;
   }
 
   .composer-actions {
-    padding-left: 40px;
-    gap: var(--space-3);
+    padding-left: 44px;
+    gap: var(--space-2);
+  }
+
+  .media-btn,
+  .tool-btn {
+    height: 34px;
+    padding: 0 10px;
+    font-size: 14px;
+  }
+
+  .composer-submit {
+    min-width: 82px;
+    height: 42px;
   }
 }

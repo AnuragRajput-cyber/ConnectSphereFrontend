@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, input } from '@angular/core';
+import { Component, HostBinding, computed, input } from '@angular/core';
 import { buildAvatarDataUri } from '../../core/visuals';
 
 @Component({
@@ -16,4 +16,9 @@ export class AvatarComponent {
   readonly size = input(44);
 
   readonly fallback = computed(() => buildAvatarDataUri(this.name(), this.seed()));
+
+  @HostBinding('style.--avatar-input-size')
+  get avatarSize(): string {
+    return `${this.size()}px`;
+  }
 }

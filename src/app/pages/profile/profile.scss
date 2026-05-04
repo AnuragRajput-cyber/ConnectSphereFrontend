@@ -24,7 +24,7 @@
   height: 220px;
   overflow: hidden;
   background: var(--brand-gradient);
-  z-index: 0;
+  z-index: 1;
   margin-bottom: 0;
   border-bottom: 1px solid var(--border-primary);
 }
@@ -60,6 +60,7 @@
   position: absolute;
   right: 1rem;
   bottom: 1rem;
+  z-index: 12;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -71,6 +72,7 @@
   font-weight: 700;
   box-shadow: var(--shadow-sm);
   cursor: pointer;
+  pointer-events: auto;
 
   input {
     position: absolute;
@@ -270,6 +272,18 @@
   min-width: 180px;
 }
 
+.profile-logout-btn {
+  display: none;
+  min-height: 46px;
+  padding: 0 1.2rem;
+  border: 1px solid var(--border-primary);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--error);
+  font-weight: 700;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
+}
+
 .danger-zone {
   display: flex;
   align-items: center;
@@ -340,12 +354,14 @@
 .post-media {
   overflow: hidden;
   border: 1px solid var(--border);
-  border-radius: 18px;
+  border-radius: 16px;
+  max-height: 520px;
 }
 
 .post-media img {
   width: 100%;
-  max-height: 460px;
+  height: auto;
+  max-height: 520px;
   object-fit: contain;
   background: #f5f7fa;
 }
@@ -420,7 +436,7 @@
 
 @media (max-width: 768px) {
   .profile-banner {
-    height: 150px;
+    height: 160px;
   }
 
   .banner-fallback {
@@ -430,8 +446,9 @@
   .banner-upload-btn {
     right: 0.8rem;
     bottom: 0.8rem;
-    min-height: 34px;
+    min-height: 36px;
     padding: 0 0.8rem;
+    font-size: 14px;
   }
 
   .about-summary,
@@ -444,9 +461,39 @@
     grid-template-columns: 1fr;
   }
 
+  .about-panel {
+    padding: 16px;
+  }
+
+  .save-btn {
+    justify-self: center;
+    width: 100%;
+    max-width: 360px;
+    min-height: 52px;
+    margin: 8px auto 0;
+  }
+
+  .profile-logout-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
   .danger-zone {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .profile-post-card {
+    padding: 12px;
+  }
+
+  .post-media,
+  .post-media img {
+    max-height: 420px;
   }
 
   .follow-list-backdrop {

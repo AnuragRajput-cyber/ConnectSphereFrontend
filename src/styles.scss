@@ -602,9 +602,12 @@ video {
 // Mobile (768px and below)
 @media (max-width: 768px) {
   :root {
-    --font-size-lg: 14px;
-    --font-size-xl: 16px;
-    --font-size-2xl: 18px;
+    --font-size-base: 15px;
+    --font-size-lg: 16px;
+    --font-size-xl: 18px;
+    --font-size-2xl: 20px;
+    --font-size-3xl: 22px;
+    --font-size-4xl: 24px;
   }
 
   .shell {
@@ -617,11 +620,16 @@ video {
   }
 
   .twitter-main-header {
-    min-height: 48px;
+    min-height: 54px;
+    padding: 0 14px;
+  }
+
+  .twitter-main-header h1 {
+    font-size: 22px;
   }
 
   .twitter-page {
-    padding: 0 10px 76px;
+    padding: 0 12px 76px;
   }
 
   .twitter-main {
@@ -631,7 +639,7 @@ video {
   }
 
   .twitter-card {
-    padding: var(--space-3);
+    padding: 12px;
   }
 }
 
@@ -639,11 +647,15 @@ video {
 @media (max-width: 480px) {
   :root {
     --space-4: 12px;
-    --font-size-base: 12px;
+    --font-size-base: 15px;
   }
 
   .twitter-main-header {
-    padding: 0 var(--space-3);
+    padding: 0 12px;
+  }
+
+  .twitter-main-header h1 {
+    font-size: 21px;
   }
 
   .twitter-card {

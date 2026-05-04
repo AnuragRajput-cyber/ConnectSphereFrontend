@@ -99,9 +99,4 @@
       <app-ui-icon name="profile" [size]="22" />
     }
   </a>
-  @if (isAuthenticated()) {
-    <button class="mobile-link mobile-logout" type="button" (click)="logoutRequested.emit()" aria-label="Logout">
-      <app-ui-icon name="logout" [size]="22" />
-    </button>
-  }
 </nav>

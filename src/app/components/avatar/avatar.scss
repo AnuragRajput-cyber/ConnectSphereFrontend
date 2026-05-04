@@ -1,13 +1,23 @@
 :host {
+  --resolved-avatar-size: var(--avatar-override-size, var(--avatar-input-size, 44px));
   display: inline-flex;
   line-height: 0;
   flex-shrink: 0;
+  width: var(--resolved-avatar-size);
+  height: var(--resolved-avatar-size);
+  aspect-ratio: 1 / 1;
 }
 
 .avatar {
   display: block;
+  width: var(--resolved-avatar-size);
+  height: var(--resolved-avatar-size);
+  min-width: var(--resolved-avatar-size);
+  min-height: var(--resolved-avatar-size);
+  aspect-ratio: 1 / 1;
   border-radius: 50%;
   object-fit: cover;
+  flex-shrink: 0;
   background: var(--bg-secondary);
   box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
   border: 2px solid var(--surface);
