@@ -7,15 +7,13 @@
         [seed]="actorSeed() || item().notificationId"
         [size]="44"
       />
-      <span class="type-icon">
-        <app-ui-icon [name]="notificationIcon()" [size]="14" />
-      </span>
+      <span class="dot"></span>
     </div>
 
     <div class="content">
       <p class="copy">
         <strong>{{ actorName() }}</strong>
-        <span>{{ message() }}</span>
+        <span>{{ item().message }}</span>
       </p>
       <div class="meta-row">
         <small>{{ item().createdAt | date: 'MMM d, h:mm a' }}</small>

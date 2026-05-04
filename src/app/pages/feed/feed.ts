@@ -382,7 +382,6 @@ export class Feed {
         authorId: user.userId,
         content: event.text,
       });
-      await this.notifyMentions(user.userId, event.text, comment.commentId, 'COMMENT').catch(() => undefined);
 
       this.cards.update((items) =>
         items.map((item) =>
@@ -722,10 +721,10 @@ export class Feed {
 
       const storyAuthorIds = user
         ? Array.from(new Set([user.userId, ...following.map((item) => item.followeeId)]))
-        : [];
+        : undefined;
 
       const [stories, trending, discoverUsers] = await Promise.all([
-        user ? this.api.getActiveStories(storyAuthorIds).catch(() => []) : Promise.resolve([]),
+        this.api.getActiveStories(storyAuthorIds).catch(() => []),
         this.api.getTrendingHashtags().catch(() => []),
         this.loadDiscoverUsers(),
       ]);
@@ -808,7 +807,7 @@ export class Feed {
       }
     }
 
-    return [];
+    return this.api.searchUsersViaSearch('').catch(() => []);
   }
 
   private async ensureSelectedPost(posts: PostResponse[]): Promise<PostResponse[]> {
@@ -858,12 +857,7 @@ export class Feed {
     }).catch(() => undefined);
   }
 
-  private async notifyMentions(
-    actorId: string,
-    content: string,
-    targetId: string,
-    targetType: 'POST' | 'COMMENT' = 'POST',
-  ): Promise<void> {
+  private async notifyMentions(actorId: string, content: string, postId: string): Promise<void> {
     const usernames = this.extractMentions(content);
     if (!usernames.length) {
       return;
@@ -880,16 +874,16 @@ export class Feed {
         recipientId: target.userId,
         actorId,
         type: 'MENTION',
-        message: targetType === 'COMMENT' ? 'mentioned you in a comment' : 'mentioned you in a post',
-        targetId,
-        targetType,
+        message: 'mentioned you in a post',
+        targetId: postId,
+        targetType: 'POST',
       }).catch(() => undefined);
     }
   }
 
   private extractMentions(content: string): string[] {
     const found = new Set<string>();
-    const regex = /(^|\s)@([a-zA-Z0-9_]{3,50})\b/g;
+    const regex = /(^|\\s)@([a-zA-Z0-9_]{3,50})\\b/g;
     let match: RegExpExecArray | null;
     while ((match = regex.exec(content)) !== null) {
       found.add(match[2]);

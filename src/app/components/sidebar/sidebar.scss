@@ -7,13 +7,11 @@
   top: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--space-5);
+  gap: var(--space-4);
   height: 100vh;
-  padding: var(--space-5) var(--space-3);
+  padding: var(--space-3) var(--space-4);
   width: var(--sidebar-width);
-  border-right: 1px solid rgba(229, 231, 235, 0.9);
-  background: rgba(255, 255, 255, 0.58);
-  backdrop-filter: blur(18px);
+  border-right: 1px solid var(--border-primary);
   overflow-y: auto;
 }
 
@@ -25,17 +23,10 @@
   height: 52px;
   border-radius: 50%;
   color: var(--accent);
-  background: rgba(255, 255, 255, 0.78);
-  box-shadow: 0 12px 30px rgba(29, 155, 240, 0.1);
-  transition: background-color var(--transition-base), transform var(--transition-base);
+  transition: background-color var(--transition-base);
 
   &:hover {
     background: rgba(29, 155, 240, 0.1);
-    transform: translateY(-1px);
-  }
-
-  app-ui-icon {
-    filter: drop-shadow(0 5px 10px rgba(29, 155, 240, 0.18));
   }
 }
 
@@ -50,40 +41,25 @@
   display: flex;
   align-items: center;
   gap: var(--space-4);
-  width: 100%;
+  width: fit-content;
   height: 48px;
-  padding: 0 18px;
+  padding: 0 var(--space-4);
   border-radius: 999px;
   color: var(--text-primary);
-  font-size: 18px;
-  font-weight: 650;
-  transition: background-color var(--transition-base), color var(--transition-base), transform var(--transition-base);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  transition: background-color var(--transition-base);
   text-decoration: none;
 
-  &:hover {
-    background: #f1f5f9;
-    transform: translateX(2px);
-  }
-
+  &:hover,
   &.active {
-    background: #e8f3ff;
-    color: var(--accent);
-  }
-
-  .nav-icon {
-    transition: transform var(--transition-base), color var(--transition-base);
-  }
-
-  &:hover .nav-icon,
-  &.active .nav-icon {
-    transform: translateY(-1px);
-    color: var(--accent);
+    background: var(--surface-hover);
   }
 }
 
 .nav-label {
-  font-size: 18px;
-  font-weight: 650;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
 }
 
 .nav-icon {
@@ -138,14 +114,11 @@
 
 .tweet-btn,
 .auth-btn {
-  background: var(--brand-gradient);
+  background: var(--accent);
   color: white;
-  box-shadow: 0 8px 20px rgba(29, 155, 240, 0.25);
 
   &:hover {
-    background: var(--brand-gradient);
-    transform: translateY(-1px);
-    box-shadow: 0 14px 30px rgba(29, 155, 240, 0.32);
+    background: var(--accent-hover);
   }
 
   &:active {
@@ -159,8 +132,7 @@
   color: var(--text-primary);
 
   &:hover {
-    background: #f8fafc;
-    border-color: #cbd5e1;
+    background: var(--surface-hover);
   }
 }
 
@@ -176,13 +148,13 @@
   grid-template-columns: 40px minmax(0, 1fr) auto;
   gap: var(--space-3);
   align-items: center;
-  padding: var(--space-3);
-  border-radius: 22px;
+  padding: var(--space-2) var(--space-3);
+  border-radius: 999px;
   transition: background-color var(--transition-base);
   text-decoration: none;
 
   &:hover {
-    background: #f8fafc;
+    background: var(--surface-hover);
   }
 }
 
@@ -216,7 +188,7 @@
 
 // ==================== RESPONSIVE ====================
 
-@media (max-width: 1200px) and (min-width: 1025px) {
+@media (max-width: 1200px) {
   .sidebar {
     width: var(--sidebar-width-collapsed);
     padding: var(--space-3) var(--space-2);
@@ -253,13 +225,10 @@
   }
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
   .sidebar {
     display: none;
   }
-}
-
-@media (max-width: 768px) {
 
   .mobile-nav {
     position: fixed;
@@ -271,16 +240,11 @@
     grid-template-columns: repeat(5, 1fr);
     align-items: center;
     justify-items: center;
-    height: 64px;
+    height: 56px;
     padding: 0 0 max(env(safe-area-inset-bottom), 0);
-    border-top: 1px solid rgba(229, 231, 235, 0.9);
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(18px);
-    box-shadow: 0 -10px 30px rgba(15, 23, 42, 0.08);
-
-    &.authenticated {
-      grid-template-columns: repeat(6, 1fr);
-    }
+    border-top: 1px solid var(--border-primary);
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(12px);
   }
 
   .mobile-link {
@@ -291,20 +255,13 @@
     height: 100%;
     color: var(--text-secondary);
     transition: color var(--transition-base);
-    border: 0;
-    background: transparent;
 
     &.active {
       color: var(--accent);
-      background: #e8f3ff;
     }
 
     &:hover {
       color: var(--text-primary);
     }
-  }
-
-  .mobile-logout {
-    color: var(--error);
   }
 }

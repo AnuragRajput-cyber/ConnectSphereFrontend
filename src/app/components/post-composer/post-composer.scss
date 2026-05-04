@@ -2,9 +2,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  padding: 18px 22px;
+  padding: var(--space-4);
   border-bottom: 1px solid var(--border-primary);
-  background: rgba(255, 255, 255, 0.96);
 }
 
 .composer-row {
@@ -27,7 +26,7 @@
   border-radius: 0;
   background: transparent;
   box-shadow: none;
-  font-size: 20px;
+  font-size: var(--font-size-xl);
   font-weight: var(--font-weight-normal);
   resize: none;
   color: var(--text-primary);
@@ -63,8 +62,8 @@
 .composer-actions {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: var(--space-2);
+  justify-content: space-between;
+  gap: var(--space-4);
   padding-left: 52px;
   border-top: 1px solid var(--border-primary);
   padding-top: var(--space-3);
@@ -76,8 +75,7 @@
   gap: var(--space-3);
 }
 
-.media-btn,
-.tool-btn {
+.media-btn {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -107,34 +105,25 @@
   }
 }
 
-.tool-btn {
-  background: transparent;
-  border: 1px solid transparent;
-
-  span {
-    font-size: 13px;
-  }
-}
-
 .composer-submit {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: 88px;
-  height: 46px;
+  height: 38px;
   padding: 0 var(--space-4);
   border: 0;
   border-radius: 999px;
-  background: var(--brand-gradient);
+  background: var(--accent);
   color: #fff;
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-bold);
-  box-shadow: 0 10px 24px rgba(29, 155, 240, 0.25);
+  box-shadow: var(--shadow-xs);
   cursor: pointer;
   transition: background-color var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base), opacity var(--transition-base);
 
   &:hover:not(:disabled) {
-    background: var(--brand-gradient);
+    background: var(--accent-hover);
     transform: translateY(-1px);
     box-shadow: var(--shadow-sm);
   }
@@ -149,10 +138,6 @@
     cursor: not-allowed;
     box-shadow: none;
   }
-}
-
-.composer-actions .composer-submit {
-  margin-left: auto;
 }
 
 // ==================== RESPONSIVE ====================

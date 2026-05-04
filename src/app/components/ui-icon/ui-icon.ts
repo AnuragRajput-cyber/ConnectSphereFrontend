@@ -4,20 +4,6 @@ import { IconName } from '../../core/social.models';
 @Component({
   selector: 'app-ui-icon',
   standalone: true,
-  styles: [`
-    :host {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      line-height: 0;
-      flex: 0 0 auto;
-    }
-
-    svg {
-      display: block;
-      transition: transform var(--transition-base), color var(--transition-base), opacity var(--transition-base);
-    }
-  `],
   template: `
     <svg
       viewBox="0 0 24 24"

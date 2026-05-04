@@ -124,7 +124,7 @@ export class CreatePostPage {
 
   private extractMentions(content: string): string[] {
     const found = new Set<string>();
-    const regex = /(^|\s)@([a-zA-Z0-9_]{3,50})\b/g;
+    const regex = /(^|\\s)@([a-zA-Z0-9_]{3,50})\\b/g;
     let match: RegExpExecArray | null;
     while ((match = regex.exec(content)) !== null) {
       found.add(match[2]);

@@ -9,13 +9,11 @@
   border-radius: 50%;
   object-fit: cover;
   background: var(--bg-secondary);
-  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+  box-shadow: none;
   border: 2px solid var(--surface);
-  transition: border-color var(--transition-base), transform var(--transition-base), box-shadow var(--transition-base);
+  transition: border-color var(--transition-base);
 
   &:hover {
     border-color: var(--accent);
-    box-shadow: 0 12px 26px rgba(29, 155, 240, 0.14);
-    transform: translateY(-1px);
   }
 }

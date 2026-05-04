@@ -1,5 +1,5 @@
 .post-card {
-  padding: 18px 22px;
+  padding: var(--space-4);
   transition: background-color var(--transition-base);
 
   &:hover {
@@ -14,7 +14,7 @@
 .tweet-row {
   display: grid;
   grid-template-columns: 48px minmax(0, 1fr);
-  gap: var(--space-4);
+  gap: var(--space-3);
 }
 
 .avatar-btn,
@@ -61,13 +61,13 @@
   strong {
     color: var(--text-primary);
     font-weight: var(--font-weight-bold);
-    font-size: 16px;
+    font-size: var(--font-size-base);
     transition: color var(--transition-base);
   }
 
   span {
     color: var(--text-secondary);
-    font-size: 15px;
+    font-size: var(--font-size-base);
   }
 }
 
@@ -93,8 +93,8 @@
 
 .post-copy {
   color: var(--text-primary);
-  font-size: 16px;
-  line-height: 1.55;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
   text-align: left;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -115,7 +115,7 @@
 .media-frame {
   overflow: hidden;
   border: 1px solid var(--border-primary);
-  border-radius: 20px;
+  border-radius: 16px;
   background: var(--bg-secondary);
   cursor: pointer;
   aspect-ratio: 4 / 5;
@@ -140,13 +140,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-3);
+  gap: var(--space-4);
   max-width: 100%;
   margin-top: var(--space-3);
   padding-top: var(--space-3);
   border-top: 1px solid var(--border-primary);
   color: var(--text-secondary);
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   flex-wrap: wrap;
 }
 
@@ -154,12 +154,12 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  padding: 7px 10px;
+  padding: var(--space-2);
   border: 0;
   background: transparent;
   color: var(--text-secondary);
   cursor: pointer;
-  border-radius: 999px;
+  border-radius: 50%;
   transition: background-color var(--transition-base), color var(--transition-base);
   font-size: var(--font-size-sm);
 
@@ -177,26 +177,17 @@
   }
 
   span {
-    font-size: 13px;
-    font-weight: 700;
-  }
-
-  small {
-    color: inherit;
-    font-size: 13px;
+    font-size: var(--font-size-sm);
   }
 }
 
 .reaction-inline select {
   min-height: 34px;
-  width: auto;
   padding: 0 12px;
   border-radius: 999px;
   border: 1px solid var(--border-primary);
-  background: #fff;
+  background: var(--surface);
   color: var(--text-primary);
-  font-size: 13px;
-  font-weight: 700;
 }
 
 .comments {
@@ -270,28 +261,5 @@
     align-self: flex-end;
     padding: var(--space-2) var(--space-4);
     height: 36px;
-  }
-}
-
-@media (max-width: 768px) {
-  .post-card {
-    padding: var(--space-4);
-  }
-
-  .tweet-row {
-    grid-template-columns: 42px minmax(0, 1fr);
-    gap: var(--space-3);
-  }
-
-  .actions {
-    gap: var(--space-2);
-  }
-
-  .action span {
-    display: none;
-  }
-
-  .reaction-inline select {
-    max-width: 140px;
   }
 }

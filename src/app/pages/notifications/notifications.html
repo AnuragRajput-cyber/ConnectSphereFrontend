@@ -56,10 +56,7 @@
       @if (loading()) {
         <div class="twitter-empty">Loading notifications...</div>
       } @else if (!notifications().length) {
-        <div class="twitter-empty">
-          <h3>No notifications yet</h3>
-          <p>You are all caught up.</p>
-        </div>
+        <div class="twitter-empty">No notifications yet.</div>
       } @else {
         <div class="twitter-list">
           @for (section of sections(); track section.label) {

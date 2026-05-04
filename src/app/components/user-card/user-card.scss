@@ -9,13 +9,13 @@
   justify-content: space-between;
   flex-direction: row;
   gap: var(--space-3);
-  padding: var(--space-4) var(--space-5);
+  padding: var(--space-3) var(--space-4);
   border-bottom: 1px solid var(--border-primary);
   background: var(--surface);
-  transition: background-color var(--transition-base), transform var(--transition-base);
+  transition: background-color var(--transition-base);
 
   &:hover {
-    background: #f8fafc;
+    background: var(--surface-hover);
   }
 
   &:last-child {
@@ -89,7 +89,6 @@
 
   &:hover {
     background: rgba(29, 155, 240, 0.1);
-    transform: translateY(-1px);
   }
 
   &.following {

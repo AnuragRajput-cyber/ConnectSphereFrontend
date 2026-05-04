@@ -23,9 +23,9 @@
   position: relative;
   height: 220px;
   overflow: hidden;
-  background: var(--brand-gradient);
+  background: linear-gradient(135deg, #dbeafe, #93c5fd 48%, #60a5fa);
   z-index: 1;
-  margin-bottom: 0;
+  margin-bottom: 60px;
   border-bottom: 1px solid var(--border-primary);
 }
 
@@ -42,7 +42,7 @@
   padding: 1.5rem;
   background:
     radial-gradient(circle at top right, rgba(255, 255, 255, 0.35), transparent 36%),
-    linear-gradient(135deg, rgba(29, 155, 240, 0.92), rgba(124, 58, 237, 0.9));
+    linear-gradient(135deg, rgba(29, 155, 240, 0.9), rgba(88, 171, 255, 0.88));
   color: #fff;
 
   span {
@@ -80,7 +80,6 @@
 }
 
 .tab-panel {
-  border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
 }
 
@@ -90,7 +89,7 @@
 }
 
 .tabs button {
-  min-height: 56px;
+  min-height: 52px;
   border: 0;
   background: transparent;
   color: var(--muted);
@@ -101,11 +100,6 @@
 .tabs button.active {
   color: var(--accent);
   box-shadow: inset 0 -3px 0 var(--accent);
-}
-
-.tabs button:hover {
-  background: #f8fafc;
-  color: var(--accent);
 }
 
 .about-panel {
@@ -305,7 +299,7 @@
   display: grid;
   gap: 0.75rem;
   width: 100%;
-  padding: 18px 22px;
+  padding: 1rem;
   border: 0;
   border-bottom: 1px solid var(--border);
   background: var(--surface);
@@ -315,11 +309,6 @@
 
 .profile-post-card:hover {
   background: var(--surface-soft);
-}
-
-.twitter-empty h3 {
-  font-size: 20px;
-  margin-bottom: 6px;
 }
 
 .post-topline {
@@ -356,68 +345,6 @@
   color: var(--muted);
 }
 
-.follow-list-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  display: grid;
-  place-items: center;
-  padding: 1rem;
-  background: rgba(15, 20, 25, 0.34);
-}
-
-.follow-list-panel {
-  width: min(520px, 100%);
-  max-height: min(680px, calc(100vh - 2rem));
-  overflow: hidden;
-  border: 1px solid var(--border-primary);
-  border-radius: 8px;
-  background: var(--surface);
-  box-shadow: 0 24px 80px rgba(15, 20, 25, 0.2);
-}
-
-.follow-list-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid var(--border-primary);
-
-  p {
-    margin: 0;
-    color: var(--muted);
-    font-size: 0.9rem;
-  }
-
-  h2 {
-    margin: 0.15rem 0 0;
-    font-size: 1.25rem;
-  }
-}
-
-.close-list-btn {
-  display: inline-grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border: 1px solid var(--border-primary);
-  border-radius: 50%;
-  background: #fff;
-  cursor: pointer;
-}
-
-.follow-list {
-  max-height: calc(min(680px, 100vh - 2rem) - 76px);
-  overflow-y: auto;
-}
-
-.follow-list-empty {
-  padding: 3rem 1.25rem;
-  color: var(--muted);
-  text-align: center;
-}
-
 @media (max-width: 768px) {
   .profile-banner {
     height: 150px;
@@ -436,19 +363,5 @@
   .danger-zone {
     flex-direction: column;
     align-items: flex-start;
-  }
-
-  .follow-list-backdrop {
-    align-items: end;
-    padding: 0;
-  }
-
-  .follow-list-panel {
-    width: 100%;
-    max-height: 78vh;
-    border-right: 0;
-    border-bottom: 0;
-    border-left: 0;
-    border-radius: 8px 8px 0 0;
   }
 }

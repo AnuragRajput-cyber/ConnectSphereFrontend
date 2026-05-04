@@ -16,65 +16,64 @@
   --space-10: 40px;
 
   // COLOR PALETTE
-  --bg: #f8fafc;
-  --bg-secondary: #f1f5f9;
+  --bg: #ffffff;
+  --bg-secondary: #f7f9f9;
   --surface: #ffffff;
-  --surface-soft: #eff6ff;
-  --surface-hover: #f8fafc;
-  --surface-active: #e8f3ff;
+  --surface-soft: #f7fbff;
+  --surface-hover: rgba(15, 20, 25, 0.05);
+  --surface-active: rgba(15, 20, 25, 0.1);
   // Aliases used by some components (kept for consistency across older/newer styles)
   --bg-primary: var(--bg);
   --bg-hover: var(--surface-hover);
 
   // TEXT COLORS
-  --text-primary: #0f172a;
-  --text-secondary: #64748b;
-  --text-muted: #64748b;
-  --text-light: #94a3b8;
-  --ink: #0f172a;
-  --muted: #64748b;
+  --text-primary: #0f1419;
+  --text-secondary: #536471;
+  --text-muted: #6b7684;
+  --text-light: #8a8f96;
+  --ink: #0f1419;
+  --muted: #6b7684;
 
   // BORDERS & DIVIDERS
-  --border-primary: #e5e7eb;
-  --border-secondary: #dbe2e8;
-  --border: #e5e7eb;
+  --border-primary: #eff3f4;
+  --border-secondary: #e7e7e7;
+  --border: #dbe2e8;
 
   // ACCENT
   --accent: #1d9bf0;
-  --accent-hover: #0f6cbd;
-  --accent-active: #0f6cbd;
-  --accent-strong: #7c3aed;
-  --brand-gradient: linear-gradient(135deg, #1d9bf0, #7c3aed);
+  --accent-hover: #1a8cd8;
+  --accent-active: #1871ca;
+  --accent-strong: #d63384;
 
   // SEMANTIC COLORS
-  --error: #ef4444;
+  --error: #f91880;
   --error-light: #f9186030;
-  --success: #22c55e;
-  --warning: #f59e0b;
+  --success: #17bf63;
+  --warning: #ffad1f;
 
   // SHADOWS
-  --shadow-xs: 0 8px 24px rgba(15, 23, 42, 0.04);
-  --shadow-sm: 0 10px 24px rgba(15, 23, 42, 0.08);
-  --shadow-md: 0 18px 45px rgba(15, 23, 42, 0.12);
-  --shadow-lg: 0 24px 80px rgba(15, 23, 42, 0.14);
+  --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
 
   // LAYOUT
-  --max-shell: 1400px;
-  --sidebar-width: 260px;
+  --max-shell: 1265px;
+  --sidebar-width: 275px;
   --sidebar-width-collapsed: 88px;
-  --feed-width: 680px;
-  --right-sidebar-width: 340px;
+  --feed-width: 600px;
+  --right-sidebar-width: 350px;
 
   // TYPOGRAPHY
-  --font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-size-sm: 13px;
+  --font-family: 'Inter', 'Helvetica Neue', system-ui, -apple-system, sans-serif;
+  --font-size-sm: 12px;
   --font-size-xs: 11px;
-  --font-size-base: 15px;
+  --font-size-base: 13px;
   --font-size-lg: 15px;
-  --font-size-xl: 18px;
-  --font-size-2xl: 22px;
+  --font-size-xl: 17px;
+  --font-size-2xl: 20px;
   --font-size-3xl: 24px;
-  --font-size-4xl: 32px;
+  --font-size-4xl: 31px;
 
   --font-weight-normal: 400;
   --font-weight-medium: 500;
@@ -97,7 +96,7 @@
   --z-tooltip: 300;
 
   // Story ring background (not Instagram's gradient; subtle premium ring)
-  --story-ring: conic-gradient(from 180deg, #1d9bf0, #7c3aed, #f472b6, #1d9bf0);
+  --story-ring: conic-gradient(from 180deg, #60a5fa, #f472b6, #a78bfa, #60a5fa);
 }
 
 * {
@@ -122,10 +121,7 @@ body {
   font-size: var(--font-size-base);
   line-height: var(--line-height-normal);
   color: var(--text-primary);
-  background:
-    radial-gradient(circle at top left, rgba(29, 155, 240, 0.08), transparent 30%),
-    radial-gradient(circle at top right, rgba(124, 58, 237, 0.06), transparent 28%),
-    var(--bg);
+  background: var(--bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -136,7 +132,7 @@ h1 {
   font-size: var(--font-size-4xl);
   font-weight: var(--font-weight-extrabold);
   line-height: var(--line-height-tight);
-  letter-spacing: 0;
+  letter-spacing: -0.02em;
 }
 
 h2 {
@@ -317,7 +313,7 @@ video {
   transition: all var(--transition-base);
 
   &:hover {
-    transform: translateY(-1px);
+    opacity: 0.8;
   }
 
   &:active {
@@ -326,7 +322,7 @@ video {
 }
 
 .btn-primary {
-  background: var(--brand-gradient);
+  background: var(--accent);
   color: white;
   font-weight: var(--font-weight-bold);
   height: 36px;
@@ -334,7 +330,6 @@ video {
 
   &:hover {
     background: var(--accent-hover);
-    box-shadow: 0 8px 18px rgba(29, 155, 240, 0.18);
   }
 
   &:active {
@@ -372,45 +367,12 @@ video {
   }
 }
 
-.twitter-primary-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  min-height: 38px;
-  padding: 0 var(--space-5);
-  border-radius: 999px;
-  border: 1px solid var(--accent);
-  background: var(--brand-gradient);
-  color: #fff;
-  font-weight: var(--font-weight-bold);
-  text-decoration: none;
-  box-shadow: 0 10px 24px rgba(29, 155, 240, 0.25);
-  transition: transform var(--transition-base),
-              background-color var(--transition-base),
-              border-color var(--transition-base),
-              box-shadow var(--transition-base),
-              opacity var(--transition-base);
-
-  &:hover:not(:disabled) {
-    background: var(--brand-gradient);
-    border-color: transparent;
-    box-shadow: 0 14px 30px rgba(29, 155, 240, 0.32);
-    transform: translateY(-1px);
-    text-decoration: none;
-  }
-
-  &:active:not(:disabled) {
-    transform: translateY(0) scale(0.98);
-  }
-}
-
 // ==================== PANEL COMPONENT ====================
 
 .panel {
   background: var(--surface);
   border: 1px solid var(--border-primary);
-  border-radius: 24px;
+  border-radius: 18px;
   box-shadow: var(--shadow-xs);
 }
 
@@ -419,7 +381,7 @@ video {
 .shell {
   display: grid;
   grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
-  gap: var(--space-6);
+  gap: var(--space-4);
   max-width: var(--max-shell);
   margin: 0 auto;
   min-height: 100vh;
@@ -437,9 +399,9 @@ video {
 
 .twitter-page {
   display: grid;
-  grid-template-columns: minmax(0, var(--feed-width)) var(--right-sidebar-width);
+  grid-template-columns: minmax(0, 1fr) var(--right-sidebar-width);
   gap: var(--space-6);
-  max-width: 1044px;
+  max-width: 990px;
   margin: 0 auto;
 }
 
@@ -448,7 +410,6 @@ video {
   background: var(--surface);
   border-left: 1px solid var(--border-primary);
   border-right: 1px solid var(--border-primary);
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.03);
 }
 
 .twitter-main-header {
@@ -459,17 +420,16 @@ video {
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
-  min-height: 64px;
-  padding: 0 var(--space-5);
+  min-height: 54px;
+  padding: 0 var(--space-4);
   border-bottom: 1px solid var(--border-primary);
-  background: rgba(255, 255, 255, 0.86);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .twitter-main-header h1 {
-  font-size: 24px;
-  font-weight: 700;
+  font-size: var(--font-size-2xl);
   margin: 0;
 }
 
@@ -484,7 +444,7 @@ video {
 }
 
 .twitter-card {
-  padding: 18px 22px;
+  padding: var(--space-4);
   border-bottom: 1px solid var(--border-primary);
   background: var(--surface);
   cursor: pointer;
@@ -509,9 +469,6 @@ video {
   padding: var(--space-6);
   text-align: center;
   color: var(--text-secondary);
-  background:
-    radial-gradient(circle at top, rgba(29, 155, 240, 0.06), transparent 45%),
-    transparent;
 
   h3 {
     color: var(--text-primary);
@@ -526,10 +483,10 @@ video {
   align-items: center;
   gap: var(--space-3);
   padding: 0 var(--space-4);
-  background: #f8fafc;
+  background: var(--bg-secondary);
   border: 1px solid var(--border-primary);
   border-radius: 999px;
-  height: 48px;
+  height: 42px;
   cursor: pointer;
   transition: background-color var(--transition-base);
 
@@ -540,7 +497,6 @@ video {
   &:focus-within {
     border-color: var(--accent);
     background: var(--surface);
-    box-shadow: 0 0 0 4px rgba(29, 155, 240, 0.1);
   }
 
   input {

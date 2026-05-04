@@ -211,10 +211,6 @@ export class ConnectSphereApiService {
     return firstValueFrom(this.http.get<CommentResponse[]>(`/api/v1/comments/post/${postId}`));
   }
 
-  getComment(commentId: string): Promise<CommentResponse> {
-    return firstValueFrom(this.http.get<CommentResponse>(`/api/v1/comments/${commentId}`));
-  }
-
   updateComment(commentId: string, content: string): Promise<CommentResponse> {
     return firstValueFrom(
       this.http.put<CommentResponse>(`/api/v1/comments/${commentId}`, { content }),

@@ -18,7 +18,7 @@
 .comment-compose {
   display: grid;
   gap: 1rem;
-  padding: 22px;
+  padding: 1rem;
   border-bottom: 1px solid var(--border-primary);
 }
 
@@ -66,8 +66,7 @@
 }
 
 .detail-copy {
-  font-size: 22px;
-  line-height: 1.45;
+  font-size: 1.35rem;
 }
 
 .hero-media {
@@ -96,17 +95,11 @@
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
-  padding: 7px 10px;
+  padding: 0;
   border: 0;
   background: transparent;
   color: var(--text-secondary);
-  border-radius: 999px;
   cursor: pointer;
-}
-
-.detail-actions button:hover {
-  background: #f8fafc;
-  color: var(--accent);
 }
 
 .detail-actions button.active {
@@ -116,14 +109,13 @@
 .reaction-picker select,
 .comment-compose textarea,
 .inline-editor textarea {
-  border-radius: 22px;
+  border-radius: 18px;
   border: 1px solid var(--border-primary);
   background: var(--surface);
   color: var(--text-primary);
 }
 
 .reaction-picker select {
-  width: auto;
   height: 34px;
   padding: 0 0.85rem;
   font-size: 0.95rem;
@@ -144,7 +136,7 @@
 
 .reply-list {
   display: grid;
-  padding: 0 22px 22px;
+  padding: 0 1rem 1rem;
 }
 
 .thread-block {

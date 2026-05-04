@@ -55,7 +55,7 @@
   </div>
 </aside>
 
-<nav class="mobile-nav" [class.authenticated]="isAuthenticated()" aria-label="Mobile navigation">
+<nav class="mobile-nav" aria-label="Mobile navigation">
   <a class="mobile-link" routerLink="/feed" routerLinkActive="active" aria-label="Home">
     <app-ui-icon name="home" [size]="22" />
   </a>
@@ -80,9 +80,4 @@
       <app-ui-icon name="profile" [size]="22" />
     }
   </a>
-  @if (isAuthenticated()) {
-    <button class="mobile-link mobile-logout" type="button" (click)="logoutRequested.emit()" aria-label="Logout">
-      <app-ui-icon name="logout" [size]="22" />
-    </button>
-  }
 </nav>

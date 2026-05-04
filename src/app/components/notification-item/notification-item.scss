@@ -3,22 +3,18 @@
   grid-template-columns: minmax(0, 1fr) auto;
   gap: var(--space-3);
   align-items: center;
-  padding: 18px 22px;
+  padding: var(--space-4) 0;
   border-bottom: 1px solid var(--border-primary);
   transition: background-color var(--transition-base);
 
   &:hover {
     background-color: var(--bg-hover);
   }
-
-  &:not(.read) {
-    background: #eff6ff;
-  }
 }
 
 .notification-body {
   display: flex;
-  gap: var(--space-4);
+  gap: var(--space-3);
   align-items: start;
   padding: 0;
   border: 0;
@@ -32,23 +28,19 @@
   flex-shrink: 0;
 }
 
-.type-icon {
+.dot {
   position: absolute;
   right: -2px;
   bottom: -2px;
-  display: grid;
-  place-items: center;
-  width: 22px;
-  height: 22px;
-  border: 2px solid #ffffff;
-  border-radius: 999px;
-  background: var(--brand-gradient);
-  color: #ffffff;
-  box-shadow: 0 8px 16px rgba(29, 155, 240, 0.22);
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--bg-primary);
+  border-radius: 50%;
+  background: var(--accent);
 }
 
-.notification-item.read .type-icon {
-  opacity: 0.62;
+.notification-item.read .dot {
+  display: none;
 }
 
 .content {
@@ -98,8 +90,8 @@
 }
 
 .notification-actions button {
-  min-height: 32px;
-  padding: 0 14px;
+  min-height: 34px;
+  padding: 0 var(--space-3);
   border: 1px solid var(--border-primary);
   border-radius: 999px;
   background: var(--bg-primary);
@@ -112,16 +104,6 @@
   &:hover {
     background-color: var(--bg-secondary);
     border-color: var(--text-secondary);
-  }
-
-  &.danger {
-    color: var(--text-secondary);
-  }
-
-  &.danger:hover {
-    border-color: rgba(239, 68, 68, 0.35);
-    background: rgba(239, 68, 68, 0.08);
-    color: var(--error);
   }
 }
 

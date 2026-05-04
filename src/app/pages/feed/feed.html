@@ -16,22 +16,19 @@
       (authRequested)="openAuth()"
     />
 
-    @if (currentUser()) {
-      <app-story-bar
-        [stories]="stories()"
-        [canCreate]="true"
-        [currentUserId]="currentUser()!.userId"
-        (createStory)="createStory($event)"
-        (storySelected)="openStory($event)"
-      />
-    }
+    <app-story-bar
+      [stories]="stories()"
+      [canCreate]="!!currentUser()"
+      [currentUserId]="currentUser()?.userId ?? null"
+      (createStory)="createStory($event)"
+      (storySelected)="openStory($event)"
+    />
 
     @if (loading()) {
       <div class="twitter-empty">Loading your live feed...</div>
     } @else if (!cards().length) {
       <div class="twitter-empty">
-        <h3>No posts yet</h3>
-        <p>Your posts will appear here once you share something.</p>
+        <h3>Nothing to show yet</h3>
       </div>
     } @else {
       <div class="twitter-list">
