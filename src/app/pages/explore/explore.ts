@@ -38,6 +38,7 @@ export class Explore {
   readonly currentUser = this.session.user;
   readonly followingIds = signal<Record<string, true>>({});
   readonly pendingIds = signal<Record<string, true>>({});
+  readonly suggestedUsers = signal<UserSummary[]>([]);
   readonly featuredUsers = computed(() => this.results().users.slice(0, 8));
   readonly mediaPosts = computed(() => this.results().posts.filter((post) => !!post.mediaUrls.length));
   readonly categoryTags = computed(() => this.results().hashtags.slice(0, 8));
@@ -139,7 +140,7 @@ export class Explore {
   }
 
   async followSuggested(userId: string): Promise<void> {
-    const user = this.results().users.find((item) => item.userId === userId);
+    const user = [...this.suggestedUsers(), ...this.results().users].find((item) => item.userId === userId);
     if (user) {
       await this.follow(user);
     }
@@ -177,7 +178,6 @@ export class Explore {
       if (!query) {
         const trending = await this.api.getTrendingHashtags().catch(() => []);
         hashtags = trending;
-        users = await this.api.searchUsersViaSearch('').catch(() => []);
 
         const ids = Array.from(
           new Set(
@@ -216,9 +216,10 @@ export class Explore {
       });
 
       if (currentUser) {
-        const [following, outgoingPending] = await Promise.all([
+        const [following, outgoingPending, suggestedUsers] = await Promise.all([
           this.api.getFollowing(currentUser.userId).catch(() => []),
           this.api.getOutgoingPendingRequests(currentUser.userId).catch(() => []),
+          this.loadSuggestedUsers(currentUser.userId),
         ]);
         this.followingIds.set(
           following.reduce<Record<string, true>>((state, item) => {
@@ -232,9 +233,36 @@ export class Explore {
             return state;
           }, {}),
         );
+        this.suggestedUsers.set(
+          suggestedUsers
+            .filter((user) => user.userId !== currentUser.userId)
+            .slice(0, 5),
+        );
+      } else {
+        this.suggestedUsers.set([]);
       }
     } finally {
       this.loading.set(false);
     }
+  }
+
+  private async loadSuggestedUsers(userId: string): Promise<UserSummary[]> {
+    const suggestedIds = await this.api.getSuggestedUsers(userId).catch(() => []);
+    if (!suggestedIds.length) {
+      return [];
+    }
+
+    const profiles = await Promise.all(
+      suggestedIds.slice(0, 5).map((id) => this.api.getPublicUserProfile(id).catch(() => null)),
+    );
+    return profiles
+      .filter((profile): profile is NonNullable<typeof profile> => !!profile)
+      .map((profile) => ({
+        userId: profile.userId,
+        username: profile.username,
+        fullName: profile.fullName,
+        profilePicUrl: profile.profilePicUrl,
+        role: profile.role,
+      }));
   }
 }

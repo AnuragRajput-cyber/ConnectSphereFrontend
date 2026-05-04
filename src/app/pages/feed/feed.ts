@@ -808,7 +808,7 @@ export class Feed {
       }
     }
 
-    return this.api.searchUsersViaSearch('').catch(() => []);
+    return [];
   }
 
   private async ensureSelectedPost(posts: PostResponse[]): Promise<PostResponse[]> {

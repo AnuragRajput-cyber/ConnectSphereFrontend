@@ -28,6 +28,10 @@
   &:hover {
     background: rgba(29, 155, 240, 0.1);
   }
+
+  app-ui-icon {
+    filter: drop-shadow(0 5px 10px rgba(29, 155, 240, 0.18));
+  }
 }
 
 .nav {
@@ -54,6 +58,16 @@
   &:hover,
   &.active {
     background: var(--surface-hover);
+  }
+
+  .nav-icon {
+    transition: transform var(--transition-base), color var(--transition-base);
+  }
+
+  &:hover .nav-icon,
+  &.active .nav-icon {
+    transform: translateY(-1px);
+    color: var(--accent);
   }
 }
 
@@ -245,6 +259,10 @@
     border-top: 1px solid var(--border-primary);
     background: rgba(255, 255, 255, 0.96);
     backdrop-filter: blur(12px);
+
+    &.authenticated {
+      grid-template-columns: repeat(6, 1fr);
+    }
   }
 
   .mobile-link {
@@ -255,6 +273,8 @@
     height: 100%;
     color: var(--text-secondary);
     transition: color var(--transition-base);
+    border: 0;
+    background: transparent;
 
     &.active {
       color: var(--accent);
@@ -263,5 +283,9 @@
     &:hover {
       color: var(--text-primary);
     }
+  }
+
+  .mobile-logout {
+    color: var(--error);
   }
 }

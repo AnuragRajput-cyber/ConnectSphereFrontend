@@ -559,7 +559,7 @@ export class Profile {
       }
     }
 
-    return this.api.searchUsersViaSearch('').catch(() => []);
+    return [];
   }
 
   private followListUserIds(mode: 'followers' | 'following', relationships: FollowResponse[]): string[] {
