@@ -7,7 +7,7 @@
   display: grid;
   grid-template-columns: 360px minmax(0, 1fr);
   min-height: 100vh;
-  background: var(--bg-primary);
+  background: var(--surface);
 }
 
 // ==================== LEFT PANE (MESSAGES LIST) ====================
@@ -16,7 +16,7 @@
   display: flex;
   flex-direction: column;
   border-right: 1px solid var(--border-primary);
-  background: var(--bg-primary);
+  background: #fff;
   overflow-y: auto;
 }
 
@@ -24,10 +24,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 56px;
+  height: 64px;
   padding: 0 var(--space-4);
   border-bottom: 1px solid var(--border-primary);
-  background: var(--bg-primary);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(16px);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -41,7 +42,7 @@
   gap: var(--space-3);
 
   h2 {
-    font-size: var(--font-size-xl);
+    font-size: 24px;
     font-weight: var(--font-weight-bold);
     color: var(--text-primary);
     margin: 0;
@@ -75,11 +76,11 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  margin: var(--space-3) var(--space-4);
+  margin: var(--space-4);
   padding: var(--space-3);
-  min-height: 42px;
+  min-height: 48px;
   border-radius: 999px;
-  background: var(--bg-secondary);
+  background: #f8fafc;
   color: var(--text-secondary);
   transition: all var(--transition-base);
 
@@ -124,7 +125,7 @@
   display: grid;
   grid-template-rows: auto 1fr auto;
   min-height: 100vh;
-  background: var(--bg-primary);
+  background: #fff;
 }
 
 .messages-chat-header {
@@ -132,10 +133,11 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
-  height: 56px;
+  height: 64px;
   padding: 0 var(--space-4);
   border-bottom: 1px solid var(--border-primary);
-  background: var(--bg-primary);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(16px);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -175,7 +177,7 @@
   min-width: 0;
 
   h3 {
-    font-size: var(--font-size-sm);
+    font-size: 16px;
     font-weight: var(--font-weight-bold);
     color: var(--text-primary);
     margin: 0;
@@ -247,7 +249,10 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  padding: var(--space-4);
+  padding: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(29, 155, 240, 0.04), transparent 32%),
+    #fff;
   overflow-y: auto;
   flex: 1;
   min-height: 0;
@@ -290,16 +295,18 @@
 
 .message-bubble {
   max-width: 55%;
-  padding: var(--space-3) var(--space-4);
-  border-radius: 18px;
-  background: var(--bg-secondary);
+  padding: 10px 14px;
+  border-radius: 18px 18px 18px 4px;
+  background: #f1f5f9;
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
   word-break: break-word;
 
   .message-row.sent & {
-    background: var(--accent);
+    background: var(--brand-gradient);
+    border-radius: 18px 18px 4px 18px;
+    box-shadow: 0 10px 22px rgba(29, 155, 240, 0.2);
   }
 }
 
@@ -366,19 +373,19 @@
   grid-template-columns: minmax(0, 1fr) auto;
   gap: var(--space-3);
   align-items: flex-end;
-  padding: var(--space-4);
+  padding: 18px 20px;
   border-top: 1px solid var(--border-primary);
-  background: var(--bg-primary);
+  background: rgba(255, 255, 255, 0.94);
 }
 
 .composer-textarea {
   flex: 1;
-  min-height: 42px;
+  min-height: 48px;
   max-height: 140px;
   padding: var(--space-3);
   border: 1px solid var(--border-primary);
-  border-radius: 20px;
-  background: var(--bg-primary);
+  border-radius: 999px;
+  background: #f8fafc;
   color: var(--text-primary);
   font-size: var(--font-size-sm);
   font-family: inherit;
@@ -399,12 +406,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 40px;
-  min-height: 40px;
+  min-width: 48px;
+  min-height: 48px;
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--brand-gradient);
   color: white;
   cursor: pointer;
   transition: all var(--transition-base);
@@ -476,7 +483,7 @@
 
 @media (max-width: 768px) {
   .messages-layout {
-    min-height: calc(100vh - 56px);
+    min-height: calc(100vh - 64px);
   }
 
   .messages-header,

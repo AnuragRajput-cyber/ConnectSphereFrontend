@@ -45,7 +45,8 @@
       <div class="actions">
         <button class="action" type="button" [class.active]="liked()" [disabled]="!currentUserId()" (click)="toggleLike()">
           <app-ui-icon name="heart" [size]="17" [filled]="liked()" />
-          <span>{{ view().post.likesCount }}</span>
+          <span>Like</span>
+          <small>{{ view().post.likesCount }}</small>
         </button>
         <label class="reaction-inline">
           <select
@@ -64,11 +65,13 @@
         </label>
         <button class="action" type="button" (click)="toggleComments()">
           <app-ui-icon name="comment" [size]="17" />
-          <span>{{ view().post.commentsCount }}</span>
+          <span>Reply</span>
+          <small>{{ view().post.commentsCount }}</small>
         </button>
         <button class="action" type="button" [disabled]="!currentUserId()" (click)="shareRequested.emit()">
           <app-ui-icon name="share" [size]="17" />
-          <span>{{ view().post.sharesCount || 0 }}</span>
+          <span>Share</span>
+          <small>{{ view().post.sharesCount || 0 }}</small>
         </button>
       </div>
 

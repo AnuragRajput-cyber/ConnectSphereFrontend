@@ -1,10 +1,4 @@
 <section class="profile-header panel">
-  <div class="profile-topbar">
-    <div class="username-row">
-      <strong>{{ user().username }}</strong>
-    </div>
-  </div>
-
   <div class="profile-body">
     <div class="avatar-column">
       <div class="story-ring">
@@ -21,6 +15,7 @@
     <div class="profile-copy">
       <div class="name-row">
         <strong>{{ user().fullName }}</strong>
+        <span>@{{ user().username }}</span>
       </div>
 
       <div class="stats">
@@ -29,12 +24,16 @@
           <span>Posts</span>
         </article>
         <article>
-          <strong>{{ counts().followers }}</strong>
-          <span>Followers</span>
+          <button type="button" class="stat-btn" (click)="followersRequested.emit()">
+            <strong>{{ counts().followers }}</strong>
+            <span>Followers</span>
+          </button>
         </article>
         <article>
-          <strong>{{ counts().following }}</strong>
-          <span>Following</span>
+          <button type="button" class="stat-btn" (click)="followingRequested.emit()">
+            <strong>{{ counts().following }}</strong>
+            <span>Following</span>
+          </button>
         </article>
       </div>
 

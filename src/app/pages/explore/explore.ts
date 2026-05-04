@@ -3,10 +3,11 @@ import { Component, computed, effect, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RightSidebarComponent } from '../../components/right-sidebar/right-sidebar';
+import { PostCardComponent } from '../../components/post-card/post-card';
 import { UiIconComponent } from '../../components/ui-icon/ui-icon';
 import { UserCardComponent } from '../../components/user-card/user-card';
 import { ConnectSphereApiService } from '../../core/connectsphere-api.service';
-import { ExploreResults, PostResponse, UserSummary } from '../../core/social.models';
+import { ExploreResults, FeedCardView, PostResponse, UserSummary } from '../../core/social.models';
 import { SessionService } from '../../core/session.service';
 import { ToastService } from '../../core/toast.service';
 import { UiShellService } from '../../core/ui-shell.service';
@@ -16,7 +17,7 @@ import { UserDirectoryService } from '../../core/user-directory.service';
 @Component({
   selector: 'app-explore',
   standalone: true,
-  imports: [CommonModule, FormsModule, UserCardComponent, RightSidebarComponent, UiIconComponent],
+  imports: [CommonModule, FormsModule, UserCardComponent, RightSidebarComponent, UiIconComponent, PostCardComponent],
   templateUrl: './explore.html',
   styleUrl: './explore.scss',
 })
@@ -38,6 +39,7 @@ export class Explore {
   readonly currentUser = this.session.user;
   readonly followingIds = signal<Record<string, true>>({});
   readonly pendingIds = signal<Record<string, true>>({});
+  readonly suggestedUsers = signal<UserSummary[]>([]);
   readonly featuredUsers = computed(() => this.results().users.slice(0, 8));
   readonly mediaPosts = computed(() => this.results().posts.filter((post) => !!post.mediaUrls.length));
   readonly categoryTags = computed(() => this.results().hashtags.slice(0, 8));
@@ -49,6 +51,15 @@ export class Explore {
         return rightScore - leftScore;
       })
       .slice(0, 9),
+  );
+  readonly topPostViews = computed<FeedCardView[]>(() =>
+    this.topPosts().map((post) => ({
+      post,
+      author: this.directory.get(post.authorId) ?? null,
+      comments: [],
+      commentsLoaded: false,
+      likePulse: false,
+    })),
   );
 
   constructor() {
@@ -139,7 +150,7 @@ export class Explore {
   }
 
   async followSuggested(userId: string): Promise<void> {
-    const user = this.results().users.find((item) => item.userId === userId);
+    const user = [...this.suggestedUsers(), ...this.results().users].find((item) => item.userId === userId);
     if (user) {
       await this.follow(user);
     }
@@ -177,7 +188,6 @@ export class Explore {
       if (!query) {
         const trending = await this.api.getTrendingHashtags().catch(() => []);
         hashtags = trending;
-        users = await this.api.searchUsersViaSearch('').catch(() => []);
 
         const ids = Array.from(
           new Set(
@@ -216,9 +226,10 @@ export class Explore {
       });
 
       if (currentUser) {
-        const [following, outgoingPending] = await Promise.all([
+        const [following, outgoingPending, suggestedUsers] = await Promise.all([
           this.api.getFollowing(currentUser.userId).catch(() => []),
           this.api.getOutgoingPendingRequests(currentUser.userId).catch(() => []),
+          this.loadSuggestedUsers(currentUser.userId),
         ]);
         this.followingIds.set(
           following.reduce<Record<string, true>>((state, item) => {
@@ -232,9 +243,36 @@ export class Explore {
             return state;
           }, {}),
         );
+        this.suggestedUsers.set(
+          suggestedUsers
+            .filter((user) => user.userId !== currentUser.userId)
+            .slice(0, 5),
+        );
+      } else {
+        this.suggestedUsers.set([]);
       }
     } finally {
       this.loading.set(false);
     }
+  }
+
+  private async loadSuggestedUsers(userId: string): Promise<UserSummary[]> {
+    const suggestedIds = await this.api.getSuggestedUsers(userId).catch(() => []);
+    if (!suggestedIds.length) {
+      return [];
+    }
+
+    const profiles = await Promise.all(
+      suggestedIds.slice(0, 5).map((id) => this.api.getPublicUserProfile(id).catch(() => null)),
+    );
+    return profiles
+      .filter((profile): profile is NonNullable<typeof profile> => !!profile)
+      .map((profile) => ({
+        userId: profile.userId,
+        username: profile.username,
+        fullName: profile.fullName,
+        profilePicUrl: profile.profilePicUrl,
+        role: profile.role,
+      }));
   }
 }

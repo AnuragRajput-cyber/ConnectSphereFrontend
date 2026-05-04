@@ -57,3 +57,11 @@ AggregateError [ECONNREFUSED]:
 AggregateError [ECONNREFUSED]: 
     at internalConnectMultiple (node:net:1142:49)
     at afterConnectMultiple (node:net:1723:7)[39m[22m
+[1m[31m[2m5:08:52 PM[22m[1m [31m[1m[vite][22m[1m[31m [31mhttp proxy error: /api/v1/hashtags/trending[31m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1142:49)
+    at afterConnectMultiple (node:net:1723:7)[39m[22m
+[1m[31m[2m5:08:52 PM[22m[1m [31m[1m[vite][22m[1m[31m [31mhttp proxy error: /api/v1/posts/feed[31m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1142:49)
+    at afterConnectMultiple (node:net:1723:7)[39m[22m

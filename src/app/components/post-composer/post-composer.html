@@ -26,6 +26,9 @@
       <span>Media</span>
       <input type="file" accept="image/*,video/*" (change)="onFileChange($event)" />
     </label>
+    <button class="tool-btn" type="button" aria-label="Add emoji" (click)="insertEmoji()">
+      <span>Emoji</span>
+    </button>
 
     <button
       class="composer-submit"

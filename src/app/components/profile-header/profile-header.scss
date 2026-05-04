@@ -1,9 +1,6 @@
 .profile-header {
-  margin-top: -4.5rem;
-}
-
-.profile-header {
-  padding: 1.25rem 0 1rem;
+  margin-top: -64px;
+  padding: 0 24px 20px;
   border: 0;
   border-bottom: 1px solid var(--border);
   border-radius: 0;
@@ -14,26 +11,16 @@
 .profile-body {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  gap: 2.25rem;
-  padding: 1rem 0 0;
+  gap: 24px;
+  padding: 0;
+  align-items: start;
 }
 
 .profile-topbar,
-.username-row,
 .actions,
 .stats {
   display: flex;
   gap: 0.8rem;
-}
-
-.profile-topbar {
-  justify-content: space-between;
-  align-items: center;
-}
-
-.username-row {
-  margin-left: 5px;
-  align-items: center;
 }
 
 .menu-btn {
@@ -55,17 +42,18 @@
 .story-ring {
   display: inline-grid;
   place-items: center;
-  width: 98px;
-  height: 98px;
+  width: 128px;
+  height: 128px;
   border-radius: 50%;
   background: var(--story-ring);
+  box-shadow: 0 12px 28px rgba(29, 155, 240, 0.2);
 }
 
 .profile-avatar {
   display: inline-grid;
   overflow: hidden;
   border-radius: 50%;
-  border: 3px solid var(--bg);
+  border: 5px solid #fff;
   box-shadow: none;
 }
 
@@ -73,10 +61,21 @@
   display: grid;
   gap: 1rem;
   align-content: start;
+  padding-top: 72px;
 }
 
-.name-row strong {
-  font-size: 1rem;
+.name-row {
+  display: grid;
+  gap: 2px;
+
+  strong {
+    font-size: 22px;
+  }
+
+  span {
+    color: var(--muted);
+    font-weight: 500;
+  }
 }
 
 .bio,
@@ -99,6 +98,24 @@
   min-width: 72px;
 }
 
+.stat-btn {
+  display: grid;
+  gap: 0.12rem;
+  min-width: 72px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.stat-btn:hover span,
+.stat-btn:focus-visible span {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
 .stats strong {
   display: block;
   font-size: 1.15rem;
@@ -106,9 +123,9 @@
 
 .primary-btn,
 .ghost-btn {
-  min-height: 34px;
+  min-height: 40px;
   padding: 0 1rem;
-  border-radius: 8px;
+  border-radius: 999px;
   font-weight: 700;
   cursor: pointer;
   flex: 1;
@@ -116,7 +133,7 @@
 
 .primary-btn {
   border: 0;
-  background: var(--accent);
+  background: var(--brand-gradient);
   color: #fff;
 
   &.pending {
@@ -129,6 +146,7 @@
 .ghost-btn {
   border: 1px solid var(--border);
   background: #fff;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
 }
 
 .ghost-btn.full {
@@ -136,8 +154,13 @@
 }
 
 @media (max-width: 760px) {
+  .profile-header {
+    margin-top: -48px;
+    padding: 0 16px 18px;
+  }
+
   .profile-body {
-    grid-template-columns: 80px minmax(0, 1fr);
+    grid-template-columns: 96px minmax(0, 1fr);
     gap: 1rem;
   }
 
@@ -145,6 +168,15 @@
     justify-content: space-between;
     gap: 1rem;
     text-align: center;
+  }
+
+  .story-ring {
+    width: 104px;
+    height: 104px;
+  }
+
+  .profile-copy {
+    padding-top: 56px;
   }
 
   .actions {

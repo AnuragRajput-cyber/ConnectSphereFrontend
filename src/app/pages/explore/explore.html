@@ -67,18 +67,14 @@
             <h2>Top posts</h2>
           </div>
           <div class="post-result-list">
-            @for (post of results().posts; track post.postId) {
-              <button class="post-result" type="button" (click)="openPost(post.postId)">
-                <div class="post-result-copy">
-                  <strong>{{ postSummary(post) }}</strong>
-                  <p>
-                    {{ post.likesCount }} likes <span aria-hidden="true">&middot;</span> {{ post.commentsCount }} comments
-                  </p>
-                </div>
-                @if (post.mediaUrls[0]) {
-                  <img [src]="post.mediaUrls[0]" alt="Post media" loading="lazy" />
-                }
-              </button>
+            @for (card of topPostViews(); track card.post.postId) {
+              <app-post-card
+                [view]="card"
+                [currentUserId]="currentUser()?.userId ?? null"
+                (postRequested)="openPost($event)"
+                (profileRequested)="openProfile($event)"
+                (authRequested)="openAuth()"
+              />
             }
           </div>
         </section>
@@ -88,7 +84,7 @@
 
   <app-right-sidebar
     [currentUser]="currentUser()"
-    [discoverUsers]="featuredUsers()"
+    [discoverUsers]="suggestedUsers()"
     [followingIds]="followingIds()"
     [pendingIds]="pendingIds()"
     [trending]="results().hashtags"

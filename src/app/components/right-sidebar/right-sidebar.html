@@ -12,7 +12,10 @@
         </button>
       }
       @if (!trending().length) {
-        <p class="widget-empty">Nothing yet.</p>
+        <div class="widget-empty">
+          <strong>No trends yet</strong>
+          <span>Topics will appear as people start posting.</span>
+        </div>
       }
     </div>
   </section>
@@ -35,7 +38,10 @@
         />
       }
       @if (!visibleDiscoverUsers().length) {
-        <p class="widget-empty">None for now.</p>
+        <div class="widget-empty">
+          <strong>No suggestions yet</strong>
+          <span>Start following people to improve recommendations.</span>
+        </div>
       }
     </div>
   </section>

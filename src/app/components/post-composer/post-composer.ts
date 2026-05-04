@@ -21,6 +21,10 @@ export class PostComposerComponent {
   readonly content = signal('');
   readonly selectedFile = signal<File | null>(null);
 
+  insertEmoji(): void {
+    this.content.update((value) => `${value}🙂`);
+  }
+
   submit(): void {
     if (!this.currentUser()) {
       this.authRequested.emit();

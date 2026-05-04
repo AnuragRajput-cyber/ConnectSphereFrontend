@@ -77,7 +77,8 @@ export class AuthPage {
       if (this.isSignup()) {
         const pending = await this.session.signup(this.signupForm());
         this.pending.set(pending);
-        this.toast.show('Verification sent', 'Enter the OTP to finish registration.', 'success');
+        this.otpCode.set('');
+        this.toast.show('Verification sent', 'Enter the OTP from your email to finish registration.', 'success');
         return;
       } else {
         if (this.forgotMode()) {
@@ -149,7 +150,8 @@ export class AuthPage {
     try {
       const refreshed = await this.session.resendOtp(pending.email);
       this.pending.set(refreshed);
-      this.toast.show('Code resent', 'A new OTP has been sent.', 'success');
+      this.otpCode.set('');
+      this.toast.show('Code resent', 'A new OTP has been sent to your email.', 'success');
     } catch (error) {
       this.toast.show(
         'Resend failed',

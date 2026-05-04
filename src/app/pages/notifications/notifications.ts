@@ -176,6 +176,11 @@ export class Notifications {
           await this.router.navigate(['/post', item.targetId]);
         }
         return;
+      case 'COMMENT':
+        if (item.targetId) {
+          await this.openCommentTarget(item.targetId);
+        }
+        return;
       case 'STORY':
         if (item.targetId) {
           await this.router.navigate(['/feed'], { queryParams: { story: item.targetId } });
@@ -232,6 +237,17 @@ export class Notifications {
       );
     } finally {
       this.loading.set(false);
+    }
+  }
+
+  private async openCommentTarget(commentId: string): Promise<void> {
+    try {
+      const comment = await this.api.getComment(commentId);
+      const threadCommentId = comment.parentCommentId ?? comment.commentId;
+      await this.router.navigate(['/post', comment.postId], { queryParams: { comment: threadCommentId } });
+    } catch {
+      this.toast.show('Comment unavailable', 'That comment could not be opened.', 'warning');
+      await this.router.navigate(['/feed']);
     }
   }
 }

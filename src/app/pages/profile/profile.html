@@ -48,6 +48,8 @@
         [followPending]="followPending()"
         (editRequested)="tab.set('about')"
         (followRequested)="toggleFollow()"
+        (followersRequested)="openFollowList('followers')"
+        (followingRequested)="openFollowList('following')"
         (messageRequested)="messageViewedUser()"
       />
 
@@ -159,7 +161,10 @@
           <p>{{ followRequested() ? 'Your follow request is pending approval.' : 'Follow this user to see their posts and media.' }}</p>
         </div>
       } @else if ((tab() === 'media' ? mediaPosts().length : posts().length) === 0) {
-        <div class="twitter-empty">Nothing to show in this section yet.</div>
+        <div class="twitter-empty">
+          <h3>No posts yet</h3>
+          <p>When this user posts, they will show up here.</p>
+        </div>
       } @else {
         <div class="twitter-list">
           @for (post of (tab() === 'media' ? mediaPosts() : posts()); track post.postId) {
@@ -197,5 +202,43 @@
       (followClicked)="followSuggested($event)"
       (profileClicked)="openProfile($event)"
     />
+
+    @if (followListMode()) {
+      <div class="follow-list-backdrop" (click)="closeFollowList()">
+        <section class="follow-list-panel" (click)="$event.stopPropagation()">
+          <header class="follow-list-header">
+            <div>
+              <p>{{ displayUser()!.fullName }}</p>
+              <h2>{{ followListTitle() }}</h2>
+            </div>
+            <button type="button" class="close-list-btn" aria-label="Close" (click)="closeFollowList()">
+              <app-ui-icon name="close" [size]="20" />
+            </button>
+          </header>
+
+          @if (followListLoading()) {
+            <div class="follow-list-empty">Loading {{ followListTitle() | lowercase }}...</div>
+          } @else if (followListUsers().length === 0) {
+            <div class="follow-list-empty">No {{ followListTitle() | lowercase }} yet.</div>
+          } @else {
+            <div class="follow-list">
+              @for (user of followListUsers(); track user.userId) {
+                <app-user-card
+                  [user]="user"
+                  [currentUserId]="currentUser()?.userId ?? null"
+                  [following]="!!discoverFollowingIds()[user.userId]"
+                  [pending]="!!discoverPendingIds()[user.userId]"
+                  [showFollow]="!!currentUser()"
+                  [showMessage]="!!currentUser()"
+                  (profileRequested)="openProfile($event)"
+                  (followRequested)="followFromList($event)"
+                  (messageRequested)="messageUser($event)"
+                />
+              }
+            </div>
+          }
+        </section>
+      </div>
+    }
   </section>
 }

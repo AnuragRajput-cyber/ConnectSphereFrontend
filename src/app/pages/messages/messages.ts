@@ -199,14 +199,23 @@ export class Messages {
       return;
     }
 
-    this.realtime.sendMessage({
+    const payload = {
       conversationId: conversation.conversationId,
       senderId: currentUser.userId,
       recipientId: this.participantId(conversation),
       content,
-    });
+    };
 
     this.draft.set('');
+    try {
+      const saved = await this.api.sendMessage(payload);
+      this.messages.update((items) =>
+        items.some((item) => item.messageId === saved.messageId) ? items : [...items, saved],
+      );
+    } catch {
+      this.draft.set(content);
+      this.toast.show('Message failed', 'Could not send this message.', 'warning');
+    }
   }
 
   private async load(): Promise<void> {

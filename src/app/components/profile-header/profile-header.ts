@@ -24,6 +24,8 @@ export class ProfileHeaderComponent {
   readonly followPending = input(false);
   readonly editRequested = output<void>();
   readonly followRequested = output<void>();
+  readonly followersRequested = output<void>();
+  readonly followingRequested = output<void>();
   readonly messageRequested = output<void>();
 
   readonly followLabel = computed(() => {
