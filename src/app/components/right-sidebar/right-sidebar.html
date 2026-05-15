@@ -5,7 +5,7 @@
     </div>
     <div class="trend-list">
       @for (tag of trending(); track tag.hashtagId) {
-        <button class="trend-item" type="button">
+        <button class="trend-item" type="button" (click)="openHashtag(tag.tag)">
           <span class="eyebrow">Trending in ConnectSphere</span>
           <strong>#{{ tag.tag }}</strong>
           <p>{{ tag.postCount }} posts</p>

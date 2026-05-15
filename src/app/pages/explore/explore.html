@@ -89,6 +89,7 @@
     [pendingIds]="pendingIds()"
     [trending]="results().hashtags"
     (followClicked)="followSuggested($event)"
+    (hashtagClicked)="openHashtag($event)"
     (profileClicked)="openProfile($event)"
     (authRequested)="openAuth()"
   />

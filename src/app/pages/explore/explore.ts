@@ -44,11 +44,18 @@ export class Explore {
   readonly mediaPosts = computed(() => this.results().posts.filter((post) => !!post.mediaUrls.length));
   readonly categoryTags = computed(() => this.results().hashtags.slice(0, 8));
   readonly topPosts = computed(() =>
-    [...this.mediaPosts()]
+    [...this.results().posts]
       .sort((left, right) => {
         const leftScore = left.likesCount * 2 + left.commentsCount;
         const rightScore = right.likesCount * 2 + right.commentsCount;
-        return rightScore - leftScore;
+        if (rightScore !== leftScore) {
+          return rightScore - leftScore;
+        }
+        const mediaDelta = Number(!!right.mediaUrls.length) - Number(!!left.mediaUrls.length);
+        if (mediaDelta !== 0) {
+          return mediaDelta;
+        }
+        return 0;
       })
       .slice(0, 9),
   );
@@ -203,6 +210,23 @@ export class Explore {
           ids.slice(0, 8).map((postId) => this.api.getPostById(postId).catch(() => null)),
         );
         posts = loadedPosts.filter((item): item is PostResponse => !!item && !item.deleted);
+      } else if (query.startsWith('#')) {
+        const normalizedTag = query.slice(1).trim();
+        const [tagPosts, matchedTags] = await Promise.all([
+          this.loadPostsForHashtag(normalizedTag),
+          this.api.searchHashtags(normalizedTag).catch(() => []),
+        ]);
+        posts = tagPosts;
+        hashtags = matchedTags.length
+          ? matchedTags
+          : normalizedTag
+            ? [{
+                hashtagId: normalizedTag,
+                tag: normalizedTag,
+                postCount: tagPosts.length,
+                lastUsedAt: new Date().toISOString(),
+              }]
+            : [];
       } else {
         [users, posts, hashtags] = await Promise.all([
           this.api.searchUsersViaSearch(query).catch(() => []),
@@ -258,5 +282,18 @@ export class Explore {
 
   private async loadSuggestedUsers(userId: string, following: FollowResponse[] = []): Promise<UserSummary[]> {
     return this.api.getFriendOfFriendSuggestions(userId, following);
+  }
+
+  private async loadPostsForHashtag(tag: string): Promise<PostResponse[]> {
+    if (!tag) {
+      return [];
+    }
+
+    const ids = await this.api.getPostsByHashtag(tag).catch(() => []);
+    const loadedPosts = await Promise.all(
+      ids.map((postId) => this.api.getPostById(postId).catch(() => null)),
+    );
+
+    return loadedPosts.filter((item): item is PostResponse => !!item && !item.deleted);
   }
 }

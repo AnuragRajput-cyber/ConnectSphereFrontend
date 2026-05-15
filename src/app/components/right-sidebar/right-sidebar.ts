@@ -18,6 +18,7 @@ export class RightSidebarComponent {
   readonly trending = input<HashtagResponse[]>([]);
   readonly followClicked = output<string>();
   readonly profileClicked = output<string>();
+  readonly hashtagClicked = output<string>();
   readonly authRequested = output<void>();
   readonly showAllSuggestions = signal(false);
   readonly visibleDiscoverUsers = computed(() =>
@@ -49,5 +50,9 @@ export class RightSidebarComponent {
 
   toggleSuggestions(): void {
     this.showAllSuggestions.update((value) => !value);
+  }
+
+  openHashtag(tag: string): void {
+    this.hashtagClicked.emit(tag);
   }
 }

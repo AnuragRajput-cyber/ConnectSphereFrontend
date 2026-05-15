@@ -33,7 +33,7 @@ describe('Explore', () => {
       getPostById: vi.fn().mockResolvedValue({
         postId: 'post-1',
         authorId: 'user-2',
-        mediaUrls: ['https://cdn.example.com/post.jpg'],
+        mediaUrls: [],
         likesCount: 2,
         commentsCount: 1,
         deleted: false,
@@ -83,6 +83,23 @@ describe('Explore', () => {
 
     expect(component.results().hashtags.length).toBe(1);
     expect(component.topPosts().length).toBe(1);
+  });
+
+  it('loads hashtag posts directly when a trending hashtag is opened', async () => {
+    const fixture = TestBed.createComponent(Explore);
+    const component = fixture.componentInstance;
+    await fixture.whenStable();
+
+    apiStub.searchHashtags.mockResolvedValue([{ hashtagId: 'starting', tag: 'starting', postCount: 1 }]);
+
+    component.openHashtag('starting');
+    await fixture.whenStable();
+
+    await vi.waitFor(() => {
+      expect(component.query()).toBe('#starting');
+      expect(apiStub.getPostsByHashtag).toHaveBeenCalledWith('starting');
+      expect(component.topPosts().length).toBe(1);
+    });
   });
 
   it('opens a direct message flow for a selected user', async () => {
