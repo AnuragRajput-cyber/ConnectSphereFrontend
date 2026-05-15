@@ -366,10 +366,15 @@ export class Messages {
       }
 
       window.requestAnimationFrame(() => {
-        thread.scrollTo({
-          top: thread.scrollHeight,
-          behavior: 'auto',
-        });
+        if (typeof thread.scrollTo === 'function') {
+          thread.scrollTo({
+            top: thread.scrollHeight,
+            behavior: 'auto',
+          });
+          return;
+        }
+
+        thread.scrollTop = thread.scrollHeight;
       });
     }, 0);
   }
