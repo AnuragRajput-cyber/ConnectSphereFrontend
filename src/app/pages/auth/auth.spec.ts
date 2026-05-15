@@ -60,10 +60,10 @@ describe('AuthPage', () => {
     const fixture = TestBed.createComponent(AuthPage);
     const component = fixture.componentInstance;
 
-    component.loginForm.set({ email: 'demo@example.com', password: 'secret' });
+    component.loginForm.set({ email: 'demo@example.com', password: 'secret1' });
     await component.submit();
 
-    expect(sessionStub.login).toHaveBeenCalledWith({ email: 'demo@example.com', password: 'secret' });
+    expect(sessionStub.login).toHaveBeenCalledWith({ email: 'demo@example.com', password: 'secret1' });
     expect(routerStub.navigateByUrl).toHaveBeenCalledWith('/feed');
     expect(toastStub.show).toHaveBeenCalledWith('Signed in', expect.any(String), 'success');
   });
@@ -77,7 +77,7 @@ describe('AuthPage', () => {
       fullName: 'New User',
       username: 'newuser',
       email: 'new@example.com',
-      password: 'secret',
+      password: 'secret1',
       bio: 'Hello',
       profilePicUrl: '',
     });

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { SessionService } from '../../core/session.service';
@@ -27,6 +28,7 @@ export class AuthPage {
 
   readonly pending = signal<RegisterPendingResponse | null>(null);
   readonly otpCode = signal('');
+  readonly formError = signal('');
 
   readonly forgotMode = signal(false);
   readonly resetMode = signal(false);
@@ -72,6 +74,14 @@ export class AuthPage {
   }
 
   async submit(): Promise<void> {
+    const validationError = this.validatePrimaryForm();
+    if (validationError) {
+      this.formError.set(validationError);
+      this.toast.show('Please fix the form', validationError, 'warning');
+      return;
+    }
+
+    this.formError.set('');
     this.working.set(true);
     try {
       if (this.isSignup()) {
@@ -104,9 +114,11 @@ export class AuthPage {
 
       await this.router.navigateByUrl(this.redirectUrl());
     } catch (error) {
+      const message = this.mapPrimaryActionError(error);
+      this.formError.set(message);
       this.toast.show(
         this.isSignup() ? 'Signup failed' : (this.forgotMode() ? 'Action failed' : 'Login failed'),
-        error instanceof Error ? error.message : 'Please review the form and try again.',
+        message,
         'warning',
       );
     } finally {
@@ -120,9 +132,18 @@ export class AuthPage {
       return;
     }
 
+    const otpCode = this.otpCode().trim();
+    if (!/^\d{6}$/.test(otpCode)) {
+      const message = 'Please enter the 6-digit verification code sent to your email.';
+      this.formError.set(message);
+      this.toast.show('Invalid code', message, 'warning');
+      return;
+    }
+
+    this.formError.set('');
     this.working.set(true);
     try {
-      await this.session.verifyEmail(pending.email, this.otpCode());
+      await this.session.verifyEmail(pending.email, otpCode);
       this.toast.show('Verified', 'Email verified. Please sign in.', 'success');
       this.pending.set(null);
       this.otpCode.set('');
@@ -130,9 +151,11 @@ export class AuthPage {
         queryParams: { redirect: this.redirectUrl(), email: pending.email },
       });
     } catch (error) {
+      const message = this.mapOtpError(error);
+      this.formError.set(message);
       this.toast.show(
         'Verification failed',
-        error instanceof Error ? error.message : 'Please check the code and try again.',
+        message,
         'warning',
       );
     } finally {
@@ -146,6 +169,7 @@ export class AuthPage {
       return;
     }
 
+    this.formError.set('');
     this.working.set(true);
     try {
       const refreshed = await this.session.resendOtp(pending.email);
@@ -153,9 +177,11 @@ export class AuthPage {
       this.otpCode.set('');
       this.toast.show('Code resent', 'A new OTP has been sent to your email.', 'success');
     } catch (error) {
+      const message = this.mapOtpError(error);
+      this.formError.set(message);
       this.toast.show(
         'Resend failed',
-        error instanceof Error ? error.message : 'Please try again.',
+        message,
         'warning',
       );
     } finally {
@@ -164,6 +190,7 @@ export class AuthPage {
   }
 
   enableForgotPassword(): void {
+    this.formError.set('');
     this.forgotMode.set(true);
     this.resetMode.set(false);
     this.resetCode.set('');
@@ -171,6 +198,7 @@ export class AuthPage {
   }
 
   cancelForgotPassword(): void {
+    this.formError.set('');
     this.forgotMode.set(false);
     this.resetMode.set(false);
     this.resetCode.set('');
@@ -182,5 +210,125 @@ export class AuthPage {
     if (email) {
       this.loginForm.update((value) => ({ ...value, email }));
     }
+  }
+
+  private validatePrimaryForm(): string {
+    if (this.isSignup()) {
+      const form = this.signupForm();
+      if (!form.fullName.trim()) {
+        return 'Please enter your full name.';
+      }
+      if (!form.username.trim()) {
+        return 'Please choose a username.';
+      }
+      if (!this.isValidEmail(form.email)) {
+        return 'Please enter a valid email address.';
+      }
+      if (form.password.trim().length < 7) {
+        return 'Password must be more than 6 characters.';
+      }
+      return '';
+    }
+
+    if (this.forgotMode()) {
+      if (!this.isValidEmail(this.loginForm().email)) {
+        return 'Please enter a valid email address.';
+      }
+
+      if (!this.resetMode()) {
+        return '';
+      }
+
+      if (!/^\d{6}$/.test(this.resetCode().trim())) {
+        return 'Please enter the 6-digit reset code from your email.';
+      }
+
+      if (this.resetNewPassword().trim().length < 7) {
+        return 'New password must be more than 6 characters.';
+      }
+
+      return '';
+    }
+
+    const form = this.loginForm();
+    if (!this.isValidEmail(form.email)) {
+      return 'Please enter a valid email address.';
+    }
+    if (form.password.trim().length < 7) {
+      return 'Password must be more than 6 characters.';
+    }
+
+    return '';
+  }
+
+  private isValidEmail(value: string): boolean {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+  }
+
+  private mapPrimaryActionError(error: unknown): string {
+    const apiMessage = this.readApiMessage(error);
+
+    if (this.isSignup()) {
+      if (apiMessage.includes('email') && apiMessage.includes('exist')) {
+        return 'This email is already registered. Try signing in instead.';
+      }
+      if (apiMessage.includes('username') && apiMessage.includes('exist')) {
+        return 'This username is already taken. Please choose another one.';
+      }
+      if (apiMessage.includes('verification email')) {
+        return 'We could not send the verification email right now. Please try again in a moment.';
+      }
+      return 'We could not create your account. Please check your details and try again.';
+    }
+
+    if (this.forgotMode()) {
+      if (!this.resetMode()) {
+        return apiMessage.includes('not found')
+          ? 'We could not find an account with that email address.'
+          : 'We could not send the reset code right now. Please try again.';
+      }
+
+      if (apiMessage.includes('invalid') || apiMessage.includes('expired')) {
+        return 'The reset code is invalid or expired. Please request a new one.';
+      }
+
+      return 'We could not reset your password. Please check the code and try again.';
+    }
+
+    if (error instanceof HttpErrorResponse && [400, 401, 403, 404].includes(error.status)) {
+      return 'Incorrect email or password.';
+    }
+
+    if (apiMessage.includes('bad credentials') || apiMessage.includes('invalid credentials')) {
+      return 'Incorrect email or password.';
+    }
+
+    return 'We could not sign you in. Please check your email and password and try again.';
+  }
+
+  private mapOtpError(error: unknown): string {
+    const apiMessage = this.readApiMessage(error);
+    if (apiMessage.includes('invalid') || apiMessage.includes('expired')) {
+      return 'That verification code is invalid or expired. Please request a new code.';
+    }
+    return 'We could not verify your email right now. Please check the code and try again.';
+  }
+
+  private readApiMessage(error: unknown): string {
+    if (error instanceof HttpErrorResponse) {
+      const apiError = error.error;
+      if (typeof apiError === 'string') {
+        return apiError.toLowerCase();
+      }
+      if (apiError && typeof apiError.message === 'string') {
+        return apiError.message.toLowerCase();
+      }
+    }
+
+    if (error instanceof Error) {
+      return error.message.toLowerCase();
+    }
+
+    return '';
   }
 }

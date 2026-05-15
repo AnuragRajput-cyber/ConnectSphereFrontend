@@ -17,6 +17,9 @@
 
     @if (pending()) {
       <form class="auth-form" (ngSubmit)="submitOtp()">
+        @if (formError()) {
+          <p class="form-feedback" role="alert">{{ formError() }}</p>
+        }
         <input
           [ngModel]="otpCode()"
           (ngModelChange)="otpCode.set($event)"
@@ -37,6 +40,9 @@
       </form>
     } @else {
       <form class="auth-form" (ngSubmit)="submit()">
+        @if (formError()) {
+          <p class="form-feedback" role="alert">{{ formError() }}</p>
+        }
         @if (isSignup()) {
         <input
           [ngModel]="signupForm().fullName"
@@ -139,11 +145,6 @@
     <a class="oauth-link" href="/oauth2/authorization/google">
       <app-ui-icon name="google" [size]="16" />
       <span>{{ isSignup() ? 'Continue with Google' : 'Sign in with Google' }}</span>
-    </a>
-
-    <a class="oauth-link" href="/oauth2/authorization/github">
-      <app-ui-icon name="github" [size]="16" />
-      <span>{{ isSignup() ? 'Continue with GitHub' : 'Sign in with GitHub' }}</span>
     </a>
 
     <p class="switch-copy">
